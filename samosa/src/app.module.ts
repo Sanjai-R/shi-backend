@@ -15,7 +15,7 @@ import { CorporateModule } from './corporate/corporate.module';
     StudentModule,
     CorporateModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}

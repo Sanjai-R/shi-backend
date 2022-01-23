@@ -5,6 +5,7 @@ import * as compression from 'compression';
 import helmet from 'helmet';
 import * as cookieParser from 'cookie-parser';
 import * as csurf from 'csurf';
+import * as redis from 'ioredis';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -15,7 +16,11 @@ async function bootstrap() {
   app.use(compression());
   app.use(helmet());
   app.use(cookieParser());
-  app.use(csurf({ cookie: true }));
+  // app.use(csurf({ cookie: true }));
+  const R = new redis();
+  global.Publisher = R;
+  global.Subscriber = R.duplicate();
+  global.Subscriber.subscribe('get-parsed-data');
   await app.listen(8000);
 }
 bootstrap();

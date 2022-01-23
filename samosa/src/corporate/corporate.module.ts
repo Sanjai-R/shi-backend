@@ -1,4 +1,14 @@
 import { Module } from '@nestjs/common';
+import { MongooseModule } from '@nestjs/mongoose';
+import { CorporateController } from './corporate.controller';
+import { CorporateService } from './corporate.service';
+import { CorporateSchema } from './schema/corporate.schema';
 
-@Module({})
+@Module({
+  imports: [
+    MongooseModule.forFeature([{ name: 'Corporate', schema: CorporateSchema }]),
+  ],
+  controllers: [CorporateController],
+  providers: [CorporateService],
+})
 export class CorporateModule {}
