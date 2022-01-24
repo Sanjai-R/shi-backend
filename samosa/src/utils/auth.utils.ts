@@ -3,7 +3,7 @@ import { Request } from 'express';
 import * as jwt from 'jsonwebtoken';
 import { Model } from 'mongoose';
 
-export const verifyRequerst = async (
+export const verifyRequest = async (
   request: Request,
   model: Model<any>,
 ): Promise<boolean> => {

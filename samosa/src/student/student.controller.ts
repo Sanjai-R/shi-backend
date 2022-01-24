@@ -1,16 +1,35 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
-import { createStudentDto } from './dto/student.dto';
-import { hashPassword } from '../utils/hashing';
+import { Body, Controller, Get, Post, Put, Query, Req } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Request } from 'express';
+import { Model } from 'mongoose';
+import { verifyRequest } from 'src/utils/auth.utils';
+import { StudentService } from './student.service';
+import { StudentDto, LoginDto, SignupDto } from './dto/student.dto';
+import { IStudent } from './interfaces/student.interface';
 @Controller('student')
 export class StudentController {
-  @Post('/create')
-  async register(@Body() data: createStudentDto) {
-    const password: string = data.password;
-    console.log(hashPassword(password));
-    return 'success';
+  constructor(
+    private readonly service: StudentService,
+    @InjectModel('Student')
+    private readonly corporateModel: Model<IStudent>,
+  ) {}
+
+  @Post('/signup')
+  Signup(@Body() data: SignupDto) {
+    return this.service.SignUp(data);
   }
-  @Get()
-  async login() {
-    return 'true';
+
+  @Get('/login')
+  Login(@Query() params: LoginDto) {
+    return this.service.login(params);
   }
+
+  // @Put('/update')
+  // async update(@Req() request: Request, @Body() data: createCorporateDto) {
+  //   const isAuthorized: boolean = await verifyRequest(
+  //     request,
+  //     this.corporateModel,
+  //   );
+  //   if (isAuthorized) return this.service.update(data);
+  // }
 }

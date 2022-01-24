@@ -2,7 +2,7 @@ import { Body, Controller, Get, Post, Put, Query, Req } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Request } from 'express';
 import { Model } from 'mongoose';
-import { verifyRequerst } from 'src/utils/auth.utils';
+import { verifyRequest } from 'src/utils/auth.utils';
 import { CorporateService } from './corporate.service';
 import { createCorporateDto, LoginDto, SignupDto } from './dto/corporate.dto';
 import { ICorporate } from './interfaces/corporate.interface';
@@ -27,7 +27,7 @@ export class CorporateController {
 
   @Put('/update')
   async update(@Req() request: Request, @Body() data: createCorporateDto) {
-    const isAuthorized: boolean = await verifyRequerst(
+    const isAuthorized: boolean = await verifyRequest(
       request,
       this.corporateModel,
     );
