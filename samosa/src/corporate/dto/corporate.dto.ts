@@ -18,16 +18,16 @@ export class createCorporateDto {
 
   @IsString()
   @IsNotEmpty()
-  company_name: String;
+  company_name: string;
 
   @IsUrl()
   @IsOptional()
-  company_website: String;
+  company_website: string;
 
   @IsUrl()
   @IsOptional()
-  company_logo: String;
+  company_logo: string;
 
   @IsString()
-  company_address: String;
+  company_address: string;
 }

@@ -1,8 +1,8 @@
 export interface ICorporate {
-  email: String;
-  mobile_number: String;
-  company_name: String;
-  company_website?: String;
-  company_logo: String;
-  company_address: String;
+  email: string;
+  mobile_number: string;
+  company_name: string;
+  company_website?: string;
+  company_logo: string;
+  company_address: string;
 }

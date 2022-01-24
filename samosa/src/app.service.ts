@@ -12,7 +12,7 @@ export class AppService {
     );
     let flag = false;
 
-    await sleep(10000);
+    await sleep(10_000);
     function sleep(ms) {
       return new Promise((resolve) => {
         global.Subscriber.on('message', (channel, message) => {
