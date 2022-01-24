@@ -51,4 +51,7 @@ export class LoginDto {
   @IsNotEmpty()
   @IsString()
   password: string;
+
+  @IsString()
+  company_address: string;
 }
