@@ -6,9 +6,12 @@ export const CorporateSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
-  mobile_number: {
+  pasword: {
     type: String,
     required: true,
+  },
+  mobile_number: {
+    type: String,
     maxlength: 12,
     minlength: 10,
   },
@@ -25,5 +28,9 @@ export const CorporateSchema = new mongoose.Schema({
   },
   company_address: {
     type: String,
+  },
+  is_steps_completed: {
+    type: Boolean,
+    default: false,
   },
 });

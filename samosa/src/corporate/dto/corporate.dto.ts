@@ -16,18 +16,39 @@ export class createCorporateDto {
   @IsNotEmpty()
   mobile_number: string;
 
+  @IsUrl()
+  @IsOptional()
+  company_website: string;
+
+  @IsUrl()
+  @IsOptional()
+  company_logo: string;
+
   @IsString()
   @IsNotEmpty()
-  company_name: String;
+  company_address: string;
+}
 
-  @IsUrl()
-  @IsOptional()
-  company_website: String;
-
-  @IsUrl()
-  @IsOptional()
-  company_logo: String;
+export class SignupDto {
+  @IsEmail()
+  @IsNotEmpty()
+  email: string;
 
   @IsString()
-  company_address: String;
+  @IsNotEmpty()
+  company_name: string;
+
+  @IsNotEmpty()
+  @IsString()
+  password: string;
+}
+
+export class LoginDto {
+  @IsNotEmpty()
+  @IsEmail()
+  email: string;
+
+  @IsNotEmpty()
+  @IsString()
+  password: string;
 }
