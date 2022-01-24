@@ -1,20 +1,25 @@
+import { NotFoundException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
+import { Model } from 'mongoose';
+import { decode } from './decoding.utils';
 
 export const hashPassword = (password: string) => {
   const saltRounds = 12;
-  let hashPassword;
-  bcrypt.genSalt(saltRounds, function (err, salt) {
-    bcrypt.hash(password, saltRounds, function (err, hash) {
-      hashPassword = hash;
-    });
-  });
-  return hashPassword;
+  const salt = bcrypt.genSaltSync(saltRounds);
+  const hash = bcrypt.hashSync(password, salt);
+  return hash;
 };
 
-export const verifyPassword = async (password: string) => {
-  const saltRounds = 12;
-  const pw = 'qw'; //todo: user password from db
-  const hash = await bcrypt.hash(pw, saltRounds);
-  const isMatch = await bcrypt.compare(password, hash);
-  return isMatch;
+export const verifyPassword = async (
+  email: string,
+  password: string,
+  model: Model<any>,
+) => {
+  const data = await model.findOne({ email: email }).exec();
+  if (data != null) {
+    const isMatch = await bcrypt.compare(decode(password), data.password);
+    return isMatch;
+  } else {
+    throw new NotFoundException();
+  }
 };

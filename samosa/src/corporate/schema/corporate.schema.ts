@@ -6,7 +6,7 @@ export const CorporateSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
-  pasword: {
+  password: {
     type: String,
     required: true,
   },

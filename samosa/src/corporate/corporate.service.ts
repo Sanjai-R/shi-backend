@@ -1,14 +1,15 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { ICorporate, ISignup } from './interfaces/corporate.interface';
+import { generateToken } from 'src/utils/auth.utils';
+import { decode } from 'src/utils/decoding.utils';
+import { hashPassword, verifyPassword } from 'src/utils/hashing';
+import { ICorporate, ILogin, ISignup } from './interfaces/corporate.interface';
 
-const decode = (password: string) => {
-  return password
-    .split('')
-    .map((char) => String.fromCharCode(char.charCodeAt(0) - 2))
-    .join('');
-};
 @Injectable()
 export class CorporateService {
   constructor(
@@ -19,25 +20,43 @@ export class CorporateService {
   async SignUp(data: ISignup) {
     const { password, ...rest } = data;
     const decodedPassword = decode(password);
-    const hashPassword = '';
-    const userData = { ...rest, hashPassword };
+    const hashedPassword = hashPassword(decodedPassword);
+    const userData = { ...rest, password: hashedPassword };
     const newUser = new this.corporateModel(userData);
     await newUser.save();
+    console.log(newUser);
     return {
       success: true,
       message: 'proceed to next step',
     };
   }
 
+  async login(data: ILogin) {
+    const isVerified = await verifyPassword(
+      data.email,
+      data.password,
+      this.corporateModel,
+    );
+    if (isVerified) {
+      const token = generateToken(data.email);
+      return {
+        success: true,
+        token: token,
+      };
+    } else {
+      throw new ForbiddenException();
+    }
+  }
+
   async update(data: ICorporate) {
     const { email, ...rest } = data;
     const dataToUpdated = { ...rest, is_steps_completed: true };
-    const res = await this.corporateModel.findOneAndUpdate(
-      { email: email },
-      dataToUpdated,
-      { new: true },
-    );
+    const res = await this.corporateModel
+      .findOneAndUpdate({ email: email }, dataToUpdated, { new: true })
+      .select('-password');
     if (res === null) throw new NotFoundException();
-    else return res;
+    else {
+      return res;
+    }
   }
 }

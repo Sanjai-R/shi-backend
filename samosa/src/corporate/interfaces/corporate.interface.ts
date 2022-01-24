@@ -10,7 +10,9 @@ export interface ISignup {
   email: string;
   company_name: string;
   password: string;
-  company_website?: string;
-  company_logo: string;
-  company_address: string;
+}
+
+export interface ILogin {
+  email: string;
+  password: string;
 }

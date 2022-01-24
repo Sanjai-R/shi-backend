@@ -33,6 +33,7 @@
     "csurf": "^1.11.0",
     "helmet": "^5.0.2",
     "ioredis": "^4.28.3",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.1.7",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
