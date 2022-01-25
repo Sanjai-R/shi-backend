@@ -2,13 +2,16 @@ import {
   ForbiddenException,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { Request } from 'express';
 import { Model } from 'mongoose';
 import { generateToken } from 'src/utils/auth.utils';
 import { decode } from 'src/utils/decoding.utils';
 import { hashPassword, verifyPassword } from 'src/utils/hashing';
 import { ICorporate, ILogin, ISignup } from './interfaces/corporate.interface';
+import jwt from 'jsonwebtoken';
 
 @Injectable()
 export class CorporateService {
@@ -67,6 +70,30 @@ export class CorporateService {
     if (res === null) throw new NotFoundException();
     else {
       return res;
+    }
+  }
+
+  async isLoggedIn(request: Request) {
+    const auth = request.headers['authorization'];
+    if (auth) {
+      if (auth === 'Bearer null') {
+      } else {
+        const token = auth.split(' ')[1];
+        try {
+          const decoded = jwt.verify(token, 'ajhasdhfjdafglkasfbsdjfd');
+          const user = await this.corporateModel
+            .findOne({ email: decoded.email })
+            .select('-password')
+            .exec();
+          if (user != null) {
+            return user;
+          } else throw new NotFoundException();
+        } catch (err) {
+          throw new UnauthorizedException();
+        }
+      }
+    } else {
+      throw new UnauthorizedException();
     }
   }
 }

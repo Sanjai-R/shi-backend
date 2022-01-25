@@ -1,11 +1,12 @@
 import {
-  BadRequestException,
   ForbiddenException,
   Injectable,
   NotFoundException,
   RequestTimeoutException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { Request } from 'express';
 import { Model } from 'mongoose';
 import { generateToken } from 'src/utils/auth.utils';
 import { decode } from 'src/utils/decoding.utils';
@@ -16,6 +17,7 @@ import {
   ISignup,
   IParser,
 } from './interfaces/student.interface';
+import jwt from 'jsonwebtoken';
 
 @Injectable()
 export class StudentService {
@@ -66,10 +68,11 @@ export class StudentService {
   }
 
   async update(data: IStudent) {
-    const name = data.name;
-    const updatedData = { ...data, is_steps_completed: true };
+    console.log(data);
+    const { email, name, ...rest } = data;
+    const updatedData = { ...rest, is_steps_completed: true };
     const res = await this.studentModel.findOneAndUpdate(
-      { name },
+      { email: email },
       updatedData,
       { new: true },
     );
@@ -78,6 +81,7 @@ export class StudentService {
       return res;
     }
   }
+
   async parser(data: IParser) {
     global.Publisher.publish(
       'get-resume-from-node',
@@ -106,6 +110,30 @@ export class StudentService {
       };
     } else {
       throw new RequestTimeoutException();
+    }
+  }
+
+  async isLoggedIn(request: Request) {
+    const auth = request.headers['authorization'];
+    if (auth) {
+      if (auth === 'Bearer null') {
+      } else {
+        const token = auth.split(' ')[1];
+        try {
+          const decoded = jwt.verify(token, 'ajhasdhfjdafglkasfbsdjfd');
+          const user = await this.studentModel
+            .findOne({ email: decoded.email })
+            .select('-password')
+            .exec();
+          if (user != null) {
+            return user;
+          } else throw new NotFoundException();
+        } catch (err) {
+          throw new UnauthorizedException();
+        }
+      }
+    } else {
+      throw new UnauthorizedException();
     }
   }
 }

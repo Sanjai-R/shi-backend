@@ -4,23 +4,43 @@ import {
   IsNumber,
   IsEmail,
   isBase64,
+  IsMobilePhone,
+  IsArray,
+  MIN_LENGTH,
+  ArrayMinSize,
+  IsOptional,
+  IsPositive,
 } from 'class-validator';
 
 export class StudentDto {
+  @IsEmail()
+  @IsNotEmpty()
   email: string;
+
+  @IsMobilePhone()
+  @IsNotEmpty()
   mobile_number: string;
-  password: string;
+
   @IsString()
   @IsNotEmpty()
   name: string;
-  device_id: string;
-  skills?: string[];
-  college?: string;
-  profiles?: [];
+
+  @IsArray()
+  @ArrayMinSize(1)
+  skills?: any[];
+
+  @IsArray()
+  profile?: [];
+
+  @IsString()
   location?: string;
-  passed_out_year?: number;
-  projects?: string[];
-  education: string[];
+
+  @IsArray()
+  @ArrayMinSize(1)
+  education: any[];
+
+  @IsNumber()
+  @IsNotEmpty()
   experience_level?: number;
 }
 export class SignupDto {

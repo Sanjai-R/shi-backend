@@ -1,16 +1,11 @@
 export interface IStudent {
   email: string;
   mobile_number: string;
-  password: string;
   name: string;
-  device_id: string;
-  skills?: string[];
-  college?: string;
-  profiles?: [];
-  passed_out_year?: number;
-  projects?: string[];
+  skills?: any[];
+  profile?: [];
   location?: string;
-  education: string[];
+  education: any[];
   experience_level?: number;
 }
 export interface ISignup {

@@ -14,6 +14,11 @@ export class StudentController {
     private readonly studentModel: Model<IStudent>,
   ) {}
 
+  @Get('/is-logged')
+  isLogged(@Req() request: Request) {
+    return this.service.isLoggedIn(request);
+  }
+
   @Post('/signup')
   Signup(@Body() data: SignupDto) {
     return this.service.SignUp(data);
@@ -26,7 +31,8 @@ export class StudentController {
 
   @Put('/update')
   async update(@Req() request: Request, @Body() data: StudentDto) {
-    return this.service.update(data);
+    const isAuthorized = await verifyRequest(request, this.studentModel);
+    if (isAuthorized) return this.service.update(data);
   }
 
   @Post('/resume-parser')

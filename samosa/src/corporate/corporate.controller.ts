@@ -15,6 +15,11 @@ export class CorporateController {
     private readonly corporateModel: Model<ICorporate>,
   ) {}
 
+  @Get('/is-logged')
+  isLogged(@Req() request: Request) {
+    return this.service.isLoggedIn(request);
+  }
+
   @Post('/signup')
   Signup(@Body() data: SignupDto) {
     return this.service.SignUp(data);
