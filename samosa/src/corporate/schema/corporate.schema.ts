@@ -12,7 +12,7 @@ export const CorporateSchema = new mongoose.Schema({
   },
   mobile_number: {
     type: String,
-    maxlength: 12,
+    maxlength: 13,
     minlength: 10,
   },
   company_name: {

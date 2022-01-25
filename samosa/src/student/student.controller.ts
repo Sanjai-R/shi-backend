@@ -4,14 +4,14 @@ import { Request } from 'express';
 import { Model } from 'mongoose';
 import { verifyRequest } from 'src/utils/auth.utils';
 import { StudentService } from './student.service';
-import { StudentDto, LoginDto, SignupDto } from './dto/student.dto';
+import { StudentDto, LoginDto, SignupDto, ParserDto } from './dto/student.dto';
 import { IStudent } from './interfaces/student.interface';
 @Controller('student')
 export class StudentController {
   constructor(
     private readonly service: StudentService,
     @InjectModel('Student')
-    private readonly corporateModel: Model<IStudent>,
+    private readonly studentModel: Model<IStudent>,
   ) {}
 
   @Post('/signup')
@@ -27,5 +27,11 @@ export class StudentController {
   @Put('/update')
   async update(@Req() request: Request, @Body() data: StudentDto) {
     return this.service.update(data);
+  }
+
+  @Post('/resume-parser')
+  async parser(@Req() request: Request, @Body() body: ParserDto): Promise<any> {
+    const isAuthorized = await verifyRequest(request, this.studentModel);
+    if (isAuthorized) return this.service.parser(body);
   }
 }
