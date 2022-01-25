@@ -3,6 +3,7 @@ import redis
 import base64
 import os
 import json
+import time
 
 
 redis_client = redis.Redis()
@@ -37,3 +38,4 @@ def exception_handler(ex, pubsub, thread):
     pubsub.close()
 
 thread = pipe.run_in_thread(exception_handler=exception_handler)
+

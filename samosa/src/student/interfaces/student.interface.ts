@@ -23,3 +23,8 @@ export interface ILogin {
   email: string;
   password: string;
 }
+
+export interface IParser {
+  data_url: string;
+  file_name: string;
+}

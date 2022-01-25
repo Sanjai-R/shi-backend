@@ -24,10 +24,15 @@ export class CorporateService {
     const userData = { ...rest, password: hashedPassword };
     const newUser = new this.corporateModel(userData);
     await newUser.save();
-    console.log(newUser);
+    const token = generateToken(rest.email);
+    const user = await this.corporateModel
+      .findOne({ email: rest.email })
+      .select('-password')
+      .exec();
     return {
       success: true,
-      message: 'proceed to next step',
+      token: token,
+      data: user,
     };
   }
 
@@ -39,9 +44,14 @@ export class CorporateService {
     );
     if (isVerified) {
       const token = generateToken(data.email);
+      const user = await this.corporateModel
+        .findOne({ email: data.email })
+        .select('-password')
+        .exec();
       return {
         success: true,
         token: token,
+        data: user,
       };
     } else {
       throw new ForbiddenException();

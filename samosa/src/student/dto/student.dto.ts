@@ -1,4 +1,10 @@
-import { IsString, IsNotEmpty, IsNumber, IsEmail } from 'class-validator';
+import {
+  IsString,
+  IsNotEmpty,
+  IsNumber,
+  IsEmail,
+  isBase64,
+} from 'class-validator';
 
 export class StudentDto {
   @IsString()
@@ -39,4 +45,14 @@ export class LoginDto {
   @IsNotEmpty()
   @IsString()
   password: string;
+}
+
+export class ParserDto {
+  @IsNotEmpty()
+  @IsString()
+  data_url: string;
+
+  @IsNotEmpty()
+  @IsString()
+  file_name: string;
 }
