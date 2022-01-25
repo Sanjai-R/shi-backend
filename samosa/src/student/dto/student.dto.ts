@@ -1,13 +1,21 @@
 import { IsString, IsNotEmpty, IsNumber, IsEmail } from 'class-validator';
 
 export class StudentDto {
+  email: string;
+  mobile_number: string;
+  password: string;
   @IsString()
   @IsNotEmpty()
   name: string;
-
-  @IsString()
-  @IsNotEmpty()
-  password: string;
+  device_id: string;
+  skills?: string[];
+  college?: string;
+  profiles?: [];
+  location?: string;
+  passed_out_year?: number;
+  projects?: string[];
+  education: string[];
+  experience_level?: number;
 }
 export class SignupDto {
   @IsEmail()

@@ -24,12 +24,8 @@ export class StudentController {
     return this.service.login(params);
   }
 
-  // @Put('/update')
-  // async update(@Req() request: Request, @Body() data: createCorporateDto) {
-  //   const isAuthorized: boolean = await verifyRequest(
-  //     request,
-  //     this.corporateModel,
-  //   );
-  //   if (isAuthorized) return this.service.update(data);
-  // }
+  @Put('/update')
+  async update(@Req() request: Request, @Body() data: StudentDto) {
+    return this.service.update(data);
+  }
 }

@@ -47,6 +47,9 @@ export const StudentSchema = new mongoose.Schema({
   experience_level: {
     type: Number,
   },
+  location: {
+    type: String,
+  },
   is_steps_completed: {
     type: Boolean,
     default: false,

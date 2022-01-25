@@ -6,9 +6,10 @@ export interface IStudent {
   device_id: string;
   skills?: string[];
   college?: string;
-  profiles?: string[];
+  profiles?: [];
   passed_out_year?: number;
   projects?: string[];
+  location?: string;
   education: string[];
   experience_level?: number;
 }

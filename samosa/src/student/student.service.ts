@@ -47,4 +47,17 @@ export class StudentService {
       throw new ForbiddenException();
     }
   }
+  async update(data: IStudent) {
+    const name = data.name;
+    const updatedData = { ...data, is_steps_completed: true };
+    const res = await this.studentModel.findOneAndUpdate(
+      { name },
+      updatedData,
+      { new: true },
+    );
+    if (res === null) throw new NotFoundException();
+    else {
+      return res;
+    }
+  }
 }

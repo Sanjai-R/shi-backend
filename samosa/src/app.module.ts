@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { StudentModule } from './student/student.module';
 import { CorporateModule } from './corporate/corporate.module';
-
+import { JobModule } from './jobs/job.module';
 @Module({
   imports: [
     MongooseModule.forRoot(
@@ -10,6 +10,7 @@ import { CorporateModule } from './corporate/corporate.module';
     ),
     StudentModule,
     CorporateModule,
+    JobModule,
   ],
   controllers: [],
   providers: [],
