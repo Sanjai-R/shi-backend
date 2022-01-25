@@ -11,7 +11,7 @@ import { generateToken } from 'src/utils/auth.utils';
 import { decode } from 'src/utils/decoding.utils';
 import { hashPassword, verifyPassword } from 'src/utils/hashing';
 import { ICorporate, ILogin, ISignup } from './interfaces/corporate.interface';
-import jwt from 'jsonwebtoken';
+import * as jwt from 'jsonwebtoken';
 
 @Injectable()
 export class CorporateService {

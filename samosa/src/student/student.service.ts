@@ -17,7 +17,7 @@ import {
   ISignup,
   IParser,
 } from './interfaces/student.interface';
-import jwt from 'jsonwebtoken';
+import * as jwt from 'jsonwebtoken';
 
 @Injectable()
 export class StudentService {
@@ -68,7 +68,6 @@ export class StudentService {
   }
 
   async update(data: IStudent) {
-    console.log(data);
     const { email, name, ...rest } = data;
     const updatedData = { ...rest, is_steps_completed: true };
     const res = await this.studentModel.findOneAndUpdate(
@@ -119,6 +118,7 @@ export class StudentService {
       if (auth === 'Bearer null') {
       } else {
         const token = auth.split(' ')[1];
+
         try {
           const decoded = jwt.verify(token, 'ajhasdhfjdafglkasfbsdjfd');
           const user = await this.studentModel
