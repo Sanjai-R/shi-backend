@@ -25,6 +25,7 @@ export class StudentService {
   constructor(
     @InjectModel('Student')
     private readonly studentModel: Model<IStudent>,
+    @InjectModel('Skill') private readonly skillModel: Model<{ skill: string }>,
   ) {}
 
   async SignUp(data: ISignup) {
@@ -86,11 +87,21 @@ export class StudentService {
     if (Leetcode != null) {
       Leetcode = await LeetcodeScrapper(leetcode);
     }
+    const _newSkills = [];
     const _skills = skills.map((skill: any) => {
+      _newSkills.push({
+        skill: skill.skill.replace(/[.,-?;:!\s]/g, '').toLowerCase(),
+      });
       return {
         skill: skill.skill.replace(/[.,-?;:!\s]/g, '').toLowerCase(),
         level: skill.level,
       };
+    });
+    _newSkills.forEach(async (skill) => {
+      try {
+        const data = new this.skillModel(skill);
+        await data.save();
+      } catch {}
     });
     const updatedData = {
       ...rest,

@@ -8,9 +8,49 @@ export class JobService {
   constructor(
     @InjectModel('Job')
     private readonly jobModel: Model<JobInterface>,
+    @InjectModel('Skill') private readonly skillModel: Model<{ skill: string }>,
+    @InjectModel('Student') private readonly studentModel: Model<any>,
   ) {}
   async createJob(data: JobDto) {
-    const newJob = new this.jobModel(data);
+    const skills = await this.skillModel.find();
+    const skillsDB = skills.map((skill) => skill.skill);
+    const keyQualification = data.key_qualifiations;
+    const Discription = data.description;
+    const Additional = data.additional_requirements;
+    const _required_skills = [];
+    keyQualification.split(' ').forEach((word) => {
+      const sanitizeWord = word.replace(/[.,-?;:!\s]/g, '').toLowerCase();
+      if (skillsDB.includes(sanitizeWord)) {
+        _required_skills.push(sanitizeWord);
+      }
+    });
+    Discription.split(' ').forEach((word) => {
+      const sanitizeWord = word.replace(/[.,-?;:!\s]/g, '').toLowerCase();
+      if (skillsDB.includes(sanitizeWord)) {
+        _required_skills.push(sanitizeWord);
+      }
+    });
+    Additional.split(' ').forEach((word) => {
+      const sanitizeWord = word.replace(/[.,-?;:!\s]/g, '').toLowerCase();
+      if (skillsDB.includes(sanitizeWord)) {
+        _required_skills.push(sanitizeWord);
+      }
+    });
+
+    const _required_skills_unique = [...new Set(_required_skills)];
+
+    const recomended_candidates = await this.studentModel
+      .find({ '_skills_private.skill': { $in: _required_skills_unique } })
+      .select('_id');
+    console.log(recomended_candidates);
+
+    const InsertData = {
+      ...data,
+      _required_skills: _required_skills_unique,
+      recommended_candidates: recomended_candidates,
+    };
+
+    const newJob = new this.jobModel(InsertData);
     await newJob.save();
 
     return {
@@ -57,10 +97,14 @@ export class JobService {
     const jobs = await this.jobModel
       .find({ posted_by: id })
       .sort({ date_posted: 'desc' })
-      .populate(
-        'posted_by',
-        'company_name company_address mobile_number company_website company_logo',
-      );
+      .populate([
+        {
+          path: 'posted_by',
+          select:
+            'company_name company_address mobile_number company_website company_logo',
+        },
+        { path: 'recommended_candidates', select: 'email name' },
+      ]);
     return jobs;
   }
 
