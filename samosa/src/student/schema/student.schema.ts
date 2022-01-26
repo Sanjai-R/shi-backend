@@ -29,6 +29,9 @@ export const StudentSchema = new mongoose.Schema({
   skills: {
     type: [],
   },
+  _skills_private: {
+    type: Array,
+  },
   college: {
     type: String,
   },
@@ -53,5 +56,11 @@ export const StudentSchema = new mongoose.Schema({
   is_steps_completed: {
     type: Boolean,
     default: false,
+  },
+  hackerrank_data: {
+    type: Map,
+  },
+  leetcode_data: {
+    type: Map,
   },
 });

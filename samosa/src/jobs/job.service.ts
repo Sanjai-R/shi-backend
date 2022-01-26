@@ -10,8 +10,7 @@ export class JobService {
     private readonly jobModel: Model<JobInterface>,
   ) {}
   async createJob(data: JobDto) {
-    const jobDate = { ...data, date: Date() };
-    const newJob = new this.jobModel(jobDate);
+    const newJob = new this.jobModel(data);
     await newJob.save();
 
     return {
@@ -51,6 +50,17 @@ export class JobService {
   }
   async getAllJobs() {
     const jobs = await this.jobModel.find();
+    return jobs;
+  }
+
+  async getJobByComapny(id: string) {
+    const jobs = await this.jobModel
+      .find({ posted_by: id })
+      .sort({ date_posted: 'desc' })
+      .populate(
+        'posted_by',
+        'company_name company_address mobile_number company_website company_logo',
+      );
     return jobs;
   }
 

@@ -15,6 +15,11 @@ export class JobController {
     return this.jobService.getJobByCategory(params);
   }
 
+  @Get('/filter-company')
+  getJobByCompany(@Query('id') params: string) {
+    return this.jobService.getJobByComapny(params);
+  }
+
   @Post('/createJob')
   createJob(@Body() data: JobDto) {
     return this.jobService.createJob(data);

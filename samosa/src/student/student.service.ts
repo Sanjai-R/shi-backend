@@ -18,6 +18,7 @@ import {
   IParser,
 } from './interfaces/student.interface';
 import * as jwt from 'jsonwebtoken';
+import { HackerrankScrapper, LeetcodeScrapper } from 'src/utils/scrapper.utils';
 
 @Injectable()
 export class StudentService {
@@ -69,7 +70,35 @@ export class StudentService {
 
   async update(data: IStudent) {
     const { email, name, ...rest } = data;
-    const updatedData = { ...rest, is_steps_completed: true };
+    const profile: string[] = data.profile;
+    const skills: any[] = data.skills;
+    let hackerrank = null;
+    let leetcode = null;
+    let Hackerrank = {};
+    let Leetcode = {};
+    profile.forEach((link) => {
+      if (link.match('https://hackerrank.com/')) hackerrank = link;
+      if (link.match('https://leetcode.com')) leetcode = link;
+    });
+    if (hackerrank != null) {
+      Hackerrank = await HackerrankScrapper(hackerrank);
+    }
+    if (Leetcode != null) {
+      Leetcode = await LeetcodeScrapper(leetcode);
+    }
+    const _skills = skills.map((skill: any) => {
+      return {
+        skill: skill.skill.replace(/[.,-?;:!\s]/g, '').toLowerCase(),
+        level: skill.level,
+      };
+    });
+    const updatedData = {
+      ...rest,
+      is_steps_completed: true,
+      hackerrank_data: Hackerrank,
+      leetcode_data: Leetcode,
+      _skills_private: _skills,
+    };
     const res = await this.studentModel.findOneAndUpdate(
       { email: email },
       updatedData,

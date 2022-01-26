@@ -1,9 +1,13 @@
-import { IsMobilePhone, IsNotEmpty, IsString, IsUrl } from 'class-validator';
+import { IsDate, IsNotEmpty, IsString, IsUrl } from 'class-validator';
 
 export class JobDto {
   @IsString()
   @IsNotEmpty()
   title: string;
+
+  @IsString()
+  @IsNotEmpty()
+  posted_by: string;
 
   @IsString()
   @IsNotEmpty()
@@ -13,29 +17,28 @@ export class JobDto {
   @IsNotEmpty()
   salary: string;
 
+  @IsString()
   @IsNotEmpty()
-  required_skills?: string[];
+  key_qualifiations: string;
 
   @IsString()
   @IsNotEmpty()
-  company_name: string;
+  educational_requirements: string;
+
+  @IsString()
+  @IsNotEmpty()
+  additional_requirements: string;
 
   @IsUrl()
   @IsNotEmpty()
-  company_website: string;
-
-  @IsString()
-  @IsNotEmpty()
-  contact_number: string;
+  application_url: string;
 
   @IsString()
   @IsNotEmpty()
   location: string;
 
-  experience_level: string;
-  job_type: string;
+  @IsNotEmpty()
   date_posted?: Date;
-  is_closed?: boolean;
 }
 export class UpdateJobDto {
   @IsString()

@@ -13,36 +13,40 @@ export const JobSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  required_skills: {
+  educational_requirements: {
+    type: String,
+    required: true,
+  },
+  additional_requirements: {
+    type: String,
+    required: true,
+  },
+  application_url: {
+    type: String,
+    required: true,
+  },
+  _required_skills: {
     type: Array,
+  },
+  posted_by: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Corporate',
+    required: true,
+  },
+  recommended_candidates: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: 'Student',
   },
   experience_level: {
     type: String,
   },
-  job_type: {
-    type: String,
-  },
   date_posted: {
     type: Date,
-    default: Date.now(),
+    required: true,
   },
   is_closed: {
     type: Boolean,
     default: false,
-  },
-  company_name: {
-    type: String,
-    required: true,
-  },
-  company_website: {
-    type: String,
-    required: true,
-  },
-  contact_number: {
-    type: String,
-    maxlength: 12,
-    required: true,
-    minlength: 10,
   },
   location: {
     type: String,

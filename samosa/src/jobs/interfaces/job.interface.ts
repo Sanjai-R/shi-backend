@@ -2,13 +2,15 @@ export interface JobInterface {
   title: string;
   description: string;
   salary: string;
-  required_skills?: string[];
+  key_qualifications: string;
+  educational_requirements: string;
+  additional_requirements: string;
+  application_url: string;
+  _required_skills: [];
+  posted_by: string;
+  recommended_candidates: [];
   experience_level: string;
-  job_type: string;
-  date_posted?: Date;
-  is_closed?: boolean;
-  company_name: string;
-  company_website: string;
-  contact_number: string;
+  date_posted: Date;
+  is_closed: boolean;
   location: string;
 }
