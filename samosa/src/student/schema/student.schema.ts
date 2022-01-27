@@ -26,6 +26,10 @@ export const StudentSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
+  recommended_jobs: {
+    type: mongoose.Types.ObjectId,
+    ref: 'Job',
+  },
   skills: {
     type: [],
   },

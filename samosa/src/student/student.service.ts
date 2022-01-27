@@ -57,7 +57,15 @@ export class StudentService {
       const token = generateToken(data.email);
       const user = await this.studentModel
         .findOne({ email: data.email })
-        .select('-password')
+        .populate({
+          path: 'recommended_jobs',
+          populate: {
+            path: 'posted_by',
+            select: 'company_name company_logo',
+          },
+          select: '_id title description ',
+        })
+        .select('-password -_skills_private')
         .exec();
       return {
         success: true,
@@ -163,7 +171,15 @@ export class StudentService {
           const decoded = jwt.verify(token, 'ajhasdhfjdafglkasfbsdjfd');
           const user = await this.studentModel
             .findOne({ email: decoded.email })
-            .select('-password')
+            .populate({
+              path: 'recommended_jobs',
+              populate: {
+                path: 'posted_by',
+                select: 'company_name company_logo',
+              },
+              select: '_id title description ',
+            })
+            .select('-password -_skills_private')
             .exec();
           if (user != null) {
             return user;

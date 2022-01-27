@@ -1,4 +1,4 @@
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { JobInterface } from './interfaces/job.interface';
 import { JobDto, UpdateJobDto, CategoryJobDto } from './dto/job.dto';
@@ -42,9 +42,11 @@ export class JobService {
     const recomended_candidates = await this.studentModel
       .find({ '_skills_private.skill': { $in: _required_skills_unique } })
       .select('_id');
-    console.log(recomended_candidates);
+
+    const _id = new Types.ObjectId();
 
     const InsertData = {
+      _id,
       ...data,
       _required_skills: _required_skills_unique,
       recommended_candidates: recomended_candidates,
@@ -52,7 +54,12 @@ export class JobService {
 
     const newJob = new this.jobModel(InsertData);
     await newJob.save();
-
+    await this.studentModel.updateMany(
+      { _id: recomended_candidates },
+      {
+        $push: { recommended_jobs: _id },
+      },
+    );
     return {
       success: true,
       message: 'proceed to next step',
