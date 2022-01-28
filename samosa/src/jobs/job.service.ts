@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { JobInterface } from './interfaces/job.interface';
 import { JobDto, UpdateJobDto, CategoryJobDto } from './dto/job.dto';
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { sendNotification } from 'src/utils/firebase-admin';
 @Injectable()
 export class JobService {
   constructor(
@@ -41,7 +42,14 @@ export class JobService {
 
     const recomended_candidates = await this.studentModel
       .find({ '_skills_private.skill': { $in: _required_skills_unique } })
-      .select('_id');
+      .select('_id device_id');
+
+    const recomended_candidates_id = recomended_candidates.map(
+      (student) => student._id,
+    );
+    const deviceTokens: string[] = recomended_candidates.map(
+      (student) => student.devie_id,
+    );
 
     const _id = new Types.ObjectId();
 
@@ -49,16 +57,21 @@ export class JobService {
       _id,
       ...data,
       _required_skills: _required_skills_unique,
-      recommended_candidates: recomended_candidates,
+      recommended_candidates: recomended_candidates_id,
     };
 
     const newJob = new this.jobModel(InsertData);
     await newJob.save();
     await this.studentModel.updateMany(
-      { _id: recomended_candidates },
+      { _id: recomended_candidates_id },
       {
         $push: { recommended_jobs: _id },
       },
+    );
+    sendNotification(
+      deviceTokens,
+      `https://localhost:3000/jobs/${_id}`,
+      `${data.title} job is posted now`,
     );
     return {
       success: true,
