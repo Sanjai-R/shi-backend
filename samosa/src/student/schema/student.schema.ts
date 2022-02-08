@@ -24,7 +24,6 @@ export const StudentSchema = new mongoose.Schema({
   device_id: {
     type: String,
     required: true,
-    unique: true,
   },
   recommended_jobs: {
     type: mongoose.Types.ObjectId,
