@@ -192,4 +192,12 @@ export class StudentService {
       throw new UnauthorizedException();
     }
   }
+  async getAllStudents() {
+    const students = await this.studentModel.find();
+    return students;
+  }
+  async getStudentsById(id: string) {
+    const students = await this.studentModel.findOne({ _id: id });
+    return students;
+  }
 }

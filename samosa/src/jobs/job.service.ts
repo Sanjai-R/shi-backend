@@ -112,7 +112,10 @@ export class JobService {
     const jobs = await this.jobModel.find();
     return jobs;
   }
-
+  async getJobsById(id: string) {
+    const data = await this.jobModel.findOne({ _id: id });
+    return data;
+  }
   async getJobByComapny(id: string) {
     const jobs = await this.jobModel
       .find({ posted_by: id })
