@@ -1,7 +1,9 @@
 import admin from 'firebase-admin';
+import { credentials } from './credentials';
 
 admin.initializeApp({
-  credential: admin.credential.cert(require('./credentials.json')),
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  credential: admin.credential.cert(credentials),
 });
 
 export const sendNotification = (

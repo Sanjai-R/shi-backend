@@ -19,7 +19,10 @@ export class JobController {
   getJobByCompany(@Query('id') params: string) {
     return this.jobService.getJobByComapny(params);
   }
-
+  @Get('/getJobById')
+  getJobById(@Query('id') params: string) {
+    return this.jobService.getJobsById(params);
+  }
   @Post('/createJob')
   createJob(@Body() data: JobDto) {
     return this.jobService.createJob(data);
