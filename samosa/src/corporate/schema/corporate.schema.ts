@@ -29,6 +29,15 @@ export const CorporateSchema = new mongoose.Schema({
   company_address: {
     type: String,
   },
+  about: {
+    type: String,
+  },
+  why_us: {
+    type: String,
+  },
+  employees: {
+    type: String,
+  },
   is_steps_completed: {
     type: Boolean,
     default: false,

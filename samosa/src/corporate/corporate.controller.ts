@@ -4,7 +4,12 @@ import { Request } from 'express';
 import { Model } from 'mongoose';
 import { verifyRequest } from 'src/utils/auth.utils';
 import { CorporateService } from './corporate.service';
-import { createCorporateDto, LoginDto, SignupDto } from './dto/corporate.dto';
+import {
+  createCorporateDto,
+  LoginDto,
+  SignupDto,
+  UpdateDto,
+} from './dto/corporate.dto';
 import { ICorporate } from './interfaces/corporate.interface';
 
 @Controller('corporate')
@@ -23,6 +28,15 @@ export class CorporateController {
   @Post('/signup')
   Signup(@Body() data: SignupDto) {
     return this.service.SignUp(data);
+  }
+
+  @Put('/profile-update')
+  async ProfileUpdate(@Req() request: Request, @Body() data: UpdateDto) {
+    const isAuthorized: boolean = await verifyRequest(
+      request,
+      this.corporateModel,
+    );
+    if (isAuthorized) return this.service.profileUpdate(data);
   }
 
   @Get('/login')

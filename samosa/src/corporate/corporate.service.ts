@@ -10,7 +10,12 @@ import { Model } from 'mongoose';
 import { generateToken } from 'src/utils/auth.utils';
 import { decode } from 'src/utils/decoding.utils';
 import { hashPassword, verifyPassword } from 'src/utils/hashing';
-import { ICorporate, ILogin, ISignup } from './interfaces/corporate.interface';
+import {
+  ICorporate,
+  ILogin,
+  ISignup,
+  IUpdate,
+} from './interfaces/corporate.interface';
 import * as jwt from 'jsonwebtoken';
 
 @Injectable()
@@ -95,5 +100,16 @@ export class CorporateService {
     } else {
       throw new UnauthorizedException();
     }
+  }
+
+  async profileUpdate(data: IUpdate) {
+    const { _id, ...rest } = data;
+    const res = await this.corporateModel.findOneAndUpdate({ _id: _id }, rest);
+    if (res == null) {
+      throw new NotFoundException();
+    }
+    return {
+      success: true,
+    };
   }
 }
