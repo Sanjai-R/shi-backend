@@ -32,9 +32,4 @@ export class JobController {
   updateJob(@Body() data: UpdateJobDto) {
     return this.jobService.updateJob(data);
   }
-
-  @Put('/closeJob')
-  closeJob(@Body() data: UpdateJobDto) {
-    return this.jobService.closeJob(data);
-  }
 }

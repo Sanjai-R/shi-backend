@@ -1,4 +1,11 @@
-import { IsDate, IsNotEmpty, IsString, IsUrl } from 'class-validator';
+import {
+  IsBoolean,
+  IsDate,
+  isNotEmpty,
+  IsNotEmpty,
+  IsString,
+  IsUrl,
+} from 'class-validator';
 
 export class JobDto {
   @IsString()
@@ -43,22 +50,43 @@ export class JobDto {
 export class UpdateJobDto {
   @IsString()
   @IsNotEmpty()
+  _id: string;
+
+  @IsString()
+  @IsNotEmpty()
   title: string;
 
-  @IsNotEmpty()
   @IsString()
-  company_name: string;
-
+  @IsNotEmpty()
   description: string;
-  company_website: string;
-  contact_number: string;
-  location: string;
-  experience_level: string;
-  job_type: string;
-  date_posted?: Date;
-  is_closed?: boolean;
+
+  @IsString()
+  @IsNotEmpty()
   salary: string;
-  required_skills?: string[];
+
+  @IsString()
+  @IsNotEmpty()
+  key_qualifiations: string;
+
+  @IsString()
+  @IsNotEmpty()
+  educational_requirements: string;
+
+  @IsString()
+  @IsNotEmpty()
+  additional_requirements: string;
+
+  @IsUrl()
+  @IsNotEmpty()
+  application_url: string;
+
+  @IsString()
+  @IsNotEmpty()
+  location: string;
+
+  @IsBoolean()
+  @IsNotEmpty()
+  is_closed: boolean;
 }
 export class CompletedJobDto {
   @IsString()

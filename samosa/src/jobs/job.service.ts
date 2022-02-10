@@ -81,33 +81,14 @@ export class JobService {
   }
 
   async updateJob(data: UpdateJobDto) {
-    const { company_name, title, ...rest } = data;
-    const updateData = await this.jobModel.findOneAndUpdate(
-      { company_name, title },
-      rest,
-      {
-        new: true,
-      },
-    );
-    if (updateData === null) throw new NotFoundException();
-    else {
-      return updateData;
-    }
+    const { _id, ...rest } = data;
+    const res = await this.jobModel.findOneAndUpdate({ _id: _id }, rest);
+    if (res == null) throw new NotFoundException();
+    return {
+      success: true,
+    };
   }
-  async closeJob(data: UpdateJobDto) {
-    const { company_name, title } = data;
-    const res = await this.jobModel.findOneAndUpdate(
-      { company_name, title },
-      { is_closed: true },
-      {
-        new: true,
-      },
-    );
-    if (res === null) throw new NotFoundException();
-    else {
-      return res;
-    }
-  }
+
   async getAllJobs() {
     const jobs = await this.jobModel.find();
     return jobs;

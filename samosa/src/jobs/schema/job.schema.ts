@@ -13,6 +13,10 @@ export const JobSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  key_qualifiations: {
+    type: String,
+    required: true,
+  },
   educational_requirements: {
     type: String,
     required: true,
