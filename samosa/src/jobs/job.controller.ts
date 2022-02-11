@@ -9,9 +9,13 @@ export class JobController {
     return this.jobService.getAllJobs();
   }
 
+  @Get('/jobs-count')
+  getJobsCount(@Query('id') _id: string) {
+    return this.jobService.getTotalJobs(_id);
+  }
+
   @Get('/getJobByCategory')
   getJobByCategory(@Query() params: CategoryJobDto) {
-    console.log(params);
     return this.jobService.getJobByCategory(params);
   }
 

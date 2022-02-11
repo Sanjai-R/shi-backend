@@ -112,6 +112,21 @@ export class JobService {
     return jobs;
   }
 
+  async getTotalJobs(id: string) {
+    const activeJobs = await this.jobModel
+      .find({ posted_by: id, is_closed: false })
+      .count();
+    const closedJobs = await this.jobModel
+      .find({ posted_by: id, is_closed: true })
+      .count();
+    return {
+      success: true,
+      total_jobs: activeJobs + closedJobs,
+      active_jobs: activeJobs,
+      closed_jobs: closedJobs,
+    };
+  }
+
   async getJobByCategory(category: CategoryJobDto) {
     const jobs = await this.jobModel.find({ title: category.title });
     return jobs;
