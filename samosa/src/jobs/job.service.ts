@@ -19,6 +19,7 @@ export class JobService {
     const Discription = data.description;
     const Additional = data.additional_requirements;
     const _required_skills = [];
+
     keyQualification.split(' ').forEach((word) => {
       const sanitizeWord = word.replace(/[.,-?;:!\s]/g, '').toLowerCase();
       if (skillsDB.includes(sanitizeWord)) {
@@ -40,8 +41,6 @@ export class JobService {
 
     const _required_skills_unique = [...new Set(_required_skills)];
 
-    console.log(_required_skills_unique);
-
     const recomended_candidates = await this.studentModel
       .find({ '_skills_private.skill': { $in: _required_skills_unique } })
       .select('_id device_id');
@@ -53,7 +52,6 @@ export class JobService {
       (student) => student.device_id,
     );
 
-    console.log(recomended_candidates, recomended_candidates_id, deviceTokens);
     const _id = new Types.ObjectId();
 
     const InsertData = {
@@ -93,7 +91,14 @@ export class JobService {
   }
 
   async getAllJobs() {
-    const jobs = await this.jobModel.find();
+    const jobs = await this.jobModel
+      .find()
+      .sort([['date_posted', -1]])
+      .populate({
+        path: 'posted_by',
+        select: 'company_name company_logo',
+      })
+      .select('_id title description location is_closed');
     return jobs;
   }
   async getJobsById(id: string) {

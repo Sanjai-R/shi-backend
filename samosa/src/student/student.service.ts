@@ -177,9 +177,9 @@ export class StudentService {
                 path: 'posted_by',
                 select: 'company_name company_logo',
               },
-              select: '_id title description ',
+              select: '_id title description location is_closed',
             })
-            .select('-password -_skills_private')
+            .select('-password -_skills_private -device_id')
             .exec();
           if (user != null) {
             return user;

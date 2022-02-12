@@ -15,8 +15,6 @@ async function bootstrap() {
   app.use(compression());
   app.use(helmet());
   app.use(json({ limit: '3mb' }));
-  // app.use(cookieParser());
-  // app.use(csurf({ cookie: true }));
   const R = new redis();
   global.Publisher = R;
   global.Subscriber = R.duplicate();

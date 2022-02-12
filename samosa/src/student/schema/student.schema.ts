@@ -25,24 +25,11 @@ export const StudentSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  recommended_jobs: {
-    type: mongoose.Types.ObjectId,
-    ref: 'Job',
-  },
   skills: {
     type: [],
   },
   _skills_private: {
     type: Array,
-  },
-  college: {
-    type: String,
-  },
-  profile: {
-    type: Array,
-  },
-  passed_out_year: {
-    type: Number,
   },
   projects: {
     type: Array,
@@ -65,5 +52,9 @@ export const StudentSchema = new mongoose.Schema({
   },
   leetcode_data: {
     type: Map,
+  },
+  recommended_jobs: {
+    type: [mongoose.Types.ObjectId],
+    ref: 'Job',
   },
 });
