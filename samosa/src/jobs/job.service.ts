@@ -40,6 +40,8 @@ export class JobService {
 
     const _required_skills_unique = [...new Set(_required_skills)];
 
+    console.log(_required_skills_unique);
+
     const recomended_candidates = await this.studentModel
       .find({ '_skills_private.skill': { $in: _required_skills_unique } })
       .select('_id device_id');
@@ -48,9 +50,10 @@ export class JobService {
       (student) => student._id,
     );
     const deviceTokens: string[] = recomended_candidates.map(
-      (student) => student.devie_id,
+      (student) => student.device_id,
     );
 
+    console.log(recomended_candidates, recomended_candidates_id, deviceTokens);
     const _id = new Types.ObjectId();
 
     const InsertData = {
