@@ -102,7 +102,13 @@ export class JobService {
     return jobs;
   }
   async getJobsById(id: string) {
-    const data = await this.jobModel.findOne({ _id: id });
+    const data = await (
+      await this.jobModel.findOne({ _id: id })
+    ).populate({
+      path: 'posted_by',
+      select:
+        'company_name company_address mobile_number company_website company_logo about why_us',
+    });
     return data;
   }
   async getJobByComapny(id: string) {
