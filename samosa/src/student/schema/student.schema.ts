@@ -31,6 +31,9 @@ export const StudentSchema = new mongoose.Schema({
   _skills_private: {
     type: Array,
   },
+  profile: {
+    Type: Array,
+  },
   projects: {
     type: Array,
   },

@@ -4,7 +4,13 @@ import { Request } from 'express';
 import { Model } from 'mongoose';
 import { verifyRequest } from 'src/utils/auth.utils';
 import { StudentService } from './student.service';
-import { StudentDto, LoginDto, SignupDto, ParserDto } from './dto/student.dto';
+import {
+  StudentDto,
+  LoginDto,
+  SignupDto,
+  ParserDto,
+  ContactDetailsDto,
+} from './dto/student.dto';
 import { IStudent } from './interfaces/student.interface';
 @Controller('student')
 export class StudentController {
@@ -33,6 +39,21 @@ export class StudentController {
   async update(@Req() request: Request, @Body() data: StudentDto) {
     const isAuthorized = await verifyRequest(request, this.studentModel);
     if (isAuthorized) return this.service.update(data);
+  }
+
+  @Put('/update-contact-details')
+  async updateContactDetails(@Body() data: ContactDetailsDto) {
+    return this.service.updateContactDetails(data);
+  }
+
+  @Put('/update-skills')
+  async updateSkills(@Body() data: any) {
+    return this.service.updateSkills(data);
+  }
+
+  @Put('/update-education')
+  async updateEducation(@Body() data: any) {
+    return this.service.updateEducation(data);
   }
 
   @Post('/resume-parser')

@@ -84,3 +84,17 @@ export class ParserDto {
   @IsString()
   file_name: string;
 }
+
+export class ContactDetailsDto {
+  @IsNotEmpty()
+  @IsString()
+  _id: string;
+
+  @IsMobilePhone()
+  @IsNotEmpty()
+  mobile_number: string;
+
+  @IsNotEmpty()
+  @IsString()
+  location: string;
+}
