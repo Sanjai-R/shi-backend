@@ -4,4 +4,5 @@ export interface QuizModel {
   question: string;
   options: [];
   answer: string;
+  language?: string;
 }

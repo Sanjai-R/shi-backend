@@ -1,4 +1,4 @@
-import { IsArray, IsNotEmpty, IsString } from 'class-validator';
+import { IsArray, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreateDto {
   @IsNotEmpty()
@@ -12,6 +12,10 @@ export class CreateDto {
   @IsNotEmpty()
   @IsString()
   question: string;
+
+  @IsOptional()
+  @IsNotEmpty()
+  language: string;
 
   @IsNotEmpty()
   @IsString()

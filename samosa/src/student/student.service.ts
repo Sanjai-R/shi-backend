@@ -251,4 +251,22 @@ export class StudentService {
       success: true,
     };
   }
+
+  async updateQuiz(data: any) {
+    const { _id, quiz_data } = data;
+    const res = await this.studentModel.findOneAndUpdate(
+      { _id: _id },
+      {
+        $push: {
+          completed_quizzes: quiz_data,
+        },
+      },
+    );
+    if (res == null) {
+      throw new NotFoundException();
+    }
+    return {
+      success: true,
+    };
+  }
 }

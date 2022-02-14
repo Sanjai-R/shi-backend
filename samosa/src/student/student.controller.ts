@@ -61,6 +61,12 @@ export class StudentController {
     const isAuthorized = await verifyRequest(request, this.studentModel);
     if (isAuthorized) return this.service.parser(body);
   }
+
+  @Put('/add-quiz-result')
+  updateQuiz(@Body() data: any) {
+    return this.service.updateQuiz(data);
+  }
+
   @Get('/get-all-students')
   async getAllStudents() {
     const data = await this.service.getAllStudents();

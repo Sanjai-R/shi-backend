@@ -9,6 +9,9 @@ export const QuizSchema = new mongoose.Schema({
     required: true,
     type: String,
   },
+  language: {
+    type: String,
+  },
   question: {
     required: true,
     type: String,

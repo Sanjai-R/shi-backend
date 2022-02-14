@@ -12,8 +12,8 @@ export class QuizController {
   }
 
   @Get('/get-quiz')
-  getQuiz(@Query('topic') topic: string) {
-    return this.quizService.getQuizByTopic(topic);
+  getQuiz(@Query('topic') topic: any, @Query('id') id: string) {
+    return this.quizService.getQuizByTopic(topic, id);
   }
 
   @Post('/validate-answers')
