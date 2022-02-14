@@ -19,6 +19,7 @@ import {
 } from './interfaces/student.interface';
 import * as jwt from 'jsonwebtoken';
 import { HackerrankScrapper, LeetcodeScrapper } from 'src/utils/scrapper.utils';
+import { ContactDetailsDto } from './dto/student.dto';
 
 @Injectable()
 export class StudentService {
@@ -83,14 +84,18 @@ export class StudentService {
     const skills: any[] = data.skills;
     let hackerrank = null;
     let leetcode = null;
-    let Hackerrank = {};
+    let Hackerrank = {
+      badges: [],
+      certificates: [],
+    };
     let Leetcode = {};
     profile.forEach((link) => {
-      if (link.match('https://hackerrank.com/')) hackerrank = link;
-      if (link.match('https://leetcode.com')) leetcode = link;
+      if (link.match('hackerrank.com')) hackerrank = link;
+      if (link.match('leetcode.com')) leetcode = link;
     });
     if (hackerrank != null) {
       Hackerrank = await HackerrankScrapper(hackerrank);
+      console.log(Hackerrank);
     }
     if (Leetcode != null) {
       Leetcode = await LeetcodeScrapper(leetcode);
@@ -177,9 +182,9 @@ export class StudentService {
                 path: 'posted_by',
                 select: 'company_name company_logo',
               },
-              select: '_id title description ',
+              select: '_id title description location is_closed',
             })
-            .select('-password -_skills_private')
+            .select('-password -_skills_private -device_id')
             .exec();
           if (user != null) {
             return user;
@@ -199,5 +204,51 @@ export class StudentService {
   async getStudentsById(id: string) {
     const students = await this.studentModel.findOne({ _id: id });
     return students;
+  }
+
+  async updateContactDetails(data: ContactDetailsDto) {
+    const { _id, ...rest } = data;
+    const res = await this.studentModel.findOneAndUpdate({ _id: _id }, rest);
+    if (res == null) {
+      throw new NotFoundException();
+    }
+    return {
+      success: true,
+    };
+  }
+
+  async updateSkills(data: any) {
+    const { _id, skills } = data;
+    const _skills = skills.map((skill: any) => {
+      return {
+        skill: skill.skill.replace(/[.,-?;:!\s]/g, '').toLowerCase(),
+        level: skill.level,
+      };
+    });
+    const res = await this.studentModel.findByIdAndUpdate(
+      { _id: _id },
+      { skills: skills, _skills_private: _skills },
+    );
+    if (res == null) {
+      throw new NotFoundException();
+    }
+    return {
+      success: true,
+    };
+  }
+
+  async updateEducation(data: any) {
+    const { _id, education } = data;
+
+    const res = await this.studentModel.findByIdAndUpdate(
+      { _id: _id },
+      { education: education },
+    );
+    if (res == null) {
+      throw new NotFoundException();
+    }
+    return {
+      success: true,
+    };
   }
 }

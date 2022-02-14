@@ -20,6 +20,7 @@ export class JobService {
     const Discription = data.description;
     const Additional = data.additional_requirements;
     const _required_skills = [];
+
     keyQualification.split(' ').forEach((word) => {
       const sanitizeWord = word.replace(/[.,-?;:!\s]/g, '').toLowerCase();
       if (skillsDB.includes(sanitizeWord)) {
@@ -49,7 +50,7 @@ export class JobService {
       (student) => student._id,
     );
     const deviceTokens: string[] = recomended_candidates.map(
-      (student) => student.devie_id,
+      (student) => student.device_id,
     );
 
     const _id = new Types.ObjectId();
@@ -104,6 +105,24 @@ export class JobService {
       select:
         'company_name company_address mobile_number company_website company_logo',
     });
+    const jobs = await this.jobModel
+      .find()
+      .sort([['date_posted', -1]])
+      .populate({
+        path: 'posted_by',
+        select: 'company_name company_logo',
+      })
+      .select('_id title description location is_closed');
+    return jobs;
+  }
+  async getJobsById(id: string) {
+    const data = await (
+      await this.jobModel.findOne({ _id: id })
+    ).populate({
+      path: 'posted_by',
+      select:
+        'company_name company_address mobile_number company_website company_logo about why_us',
+    });
     return data;
   }
   async getJobByCompany(id: string) {
@@ -119,6 +138,21 @@ export class JobService {
         { path: 'recommended_candidates', select: 'email name' },
       ]);
     return jobs;
+  }
+
+  async getTotalJobs(id: string) {
+    const activeJobs = await this.jobModel
+      .find({ posted_by: id, is_closed: false })
+      .count();
+    const closedJobs = await this.jobModel
+      .find({ posted_by: id, is_closed: true })
+      .count();
+    return {
+      success: true,
+      total_jobs: activeJobs + closedJobs,
+      active_jobs: activeJobs,
+      closed_jobs: closedJobs,
+    };
   }
 
   async getJobByCategory(category: CategoryJobDto) {

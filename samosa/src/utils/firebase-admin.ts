@@ -10,22 +10,30 @@ export const sendNotification = (
   link: string,
   message: string,
 ) => {
-  admin.messaging().sendMulticast({
-    tokens: tokens,
-    notification: {
-      title: 'New Job Recommended for you',
-    },
-    webpush: {
-      headers: {
-        Urgency: 'high',
-      },
+  admin
+    .messaging()
+    .sendMulticast({
+      tokens: tokens,
       notification: {
-        body: message,
-        requireInteraction: true,
-        data: {
-          link: link,
+        title: 'New Job Recommended for you',
+      },
+      webpush: {
+        headers: {
+          Urgency: 'high',
+        },
+        notification: {
+          body: message,
+          requireInteraction: true,
+          data: {
+            link: link,
+          },
         },
       },
-    },
-  });
+    })
+    .then((value) => {
+      console.log(value);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };

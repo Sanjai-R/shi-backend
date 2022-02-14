@@ -48,7 +48,7 @@ export const HackerrankScrapper = async (url: string) => {
       badges: badges,
       certificates: certificates,
     };
-  } catch {
+  } catch (err) {
     browser.close();
     return {
       badges: [],
