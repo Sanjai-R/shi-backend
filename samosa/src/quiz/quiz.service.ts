@@ -29,6 +29,7 @@ export class QuizService {
           type: 1,
           question: 1,
           options: 1,
+          language: 1,
         })
         .match({ topic: topic })
         .sample(10);
@@ -43,20 +44,21 @@ export class QuizService {
 
   async validateAnswers(answers: any[]) {
     const _questions = [];
-    const _answers = [];
     let Score = 0;
     answers.forEach((quiz: any) => {
       _questions.push(quiz.question);
-      _answers.push(quiz.answer);
     });
     const correct_answers = (await this.quizModel
       .find({ question: _questions })
-      .select('-_id answer')) as [];
-    correct_answers.forEach(({ answer }: { answer: string }, index: number) => {
-      if (answer === _answers[index]) {
-        Score++;
-      }
-    });
+      .select('-_id answer question')) as [];
+    correct_answers.forEach(
+      ({ answer, question }: { answer: string; question: string }) => {
+        const value = answers.filter((val: any) => val.question === question);
+        if (value.length === 1 && answer === value[0].answer) {
+          Score++;
+        }
+      },
+    );
     return {
       success: true,
       score: Score,
