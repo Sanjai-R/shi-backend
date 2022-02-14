@@ -11,6 +11,7 @@ export class JobService {
     private readonly jobModel: Model<JobInterface>,
     @InjectModel('Skill') private readonly skillModel: Model<{ skill: string }>,
     @InjectModel('Student') private readonly studentModel: Model<any>,
+    @InjectModel('Corporate') private readonly corporateModel: Model<any>,
   ) {}
   async createJob(data: JobDto) {
     const skills = await this.skillModel.find();
@@ -90,14 +91,22 @@ export class JobService {
   }
 
   async getAllJobs() {
-    const jobs = await this.jobModel.find();
+    const jobs = await this.jobModel.find().populate({
+      path: 'posted_by',
+      select:
+        'company_name company_address mobile_number company_website company_logo',
+    });
     return jobs;
   }
   async getJobsById(id: string) {
-    const data = await this.jobModel.findOne({ _id: id });
+    const data = await this.jobModel.findOne({ _id: id }).populate({
+      path: 'posted_by',
+      select:
+        'company_name company_address mobile_number company_website company_logo',
+    });
     return data;
   }
-  async getJobByComapny(id: string) {
+  async getJobByCompany(id: string) {
     const jobs = await this.jobModel
       .find({ posted_by: id })
       .sort({ date_posted: 'desc' })
@@ -114,6 +123,28 @@ export class JobService {
 
   async getJobByCategory(category: CategoryJobDto) {
     const jobs = await this.jobModel.find({ title: category.title });
+    return jobs;
+  }
+  async getJobByLocation(location: string) {
+    const data = await this.getAllJobs();
+    const jobs = [];
+    data.map((job: any) => {
+      if (job.location.toLowerCase().match(location.toLowerCase())) {
+        jobs.push(job);
+      }
+    });
+    return jobs;
+  }
+  async getJobByCompanyName(companyName: string) {
+    const jobs = await this.jobModel.find().populate([
+      {
+        path: 'posted_by',
+        match: { company_name: companyName, case_sensitive: false },
+        select:
+          'company_name company_address mobile_number company_website company_logo',
+      },
+    ]);
+
     return jobs;
   }
 }

@@ -5,11 +5,13 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { JobSchema } from './schema/job.schema';
 import { SkillsModule } from 'src/skills/skills.module';
 import { StudentModule } from 'src/student/student.module';
+import { CorporateModule } from 'src/corporate/corporate.module';
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: 'Job', schema: JobSchema }]),
     SkillsModule,
     StudentModule,
+    CorporateModule,
   ],
   controllers: [JobController],
   providers: [JobService],
