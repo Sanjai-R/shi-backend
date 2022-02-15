@@ -1,14 +1,15 @@
 FROM ubuntu:latest
 
-WORKDIR /usr/src/app
-
-RUN apt-get update && \ 
-    apt-get install -y build-essential \
+RUN apt-get update
+RUN apt-get install -y build-essential \
     wget \
     python3 \
+    python3-pip \
     make \
     gcc \
     libc6-dev
+
+WORKDIR /usr/src/app
 
 RUN pip install redis
 RUN pip install resume-parser

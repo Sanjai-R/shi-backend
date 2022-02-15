@@ -4,6 +4,7 @@ import { JobInterface } from './interfaces/job.interface';
 import { JobDto, UpdateJobDto, CategoryJobDto } from './dto/job.dto';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { sendNotification } from 'src/utils/firebase-admin';
+
 @Injectable()
 export class JobService {
   constructor(
@@ -19,27 +20,41 @@ export class JobService {
     const Discription = data.description;
     const Additional = data.additional_requirements;
     const _required_skills = [];
+    const _required_skills_text = [];
 
     keyQualification.split(' ').forEach((word) => {
       const sanitizeWord = word.replace(/[.,-?;:!\s]/g, '').toLowerCase();
-      if (skillsDB.includes(sanitizeWord)) {
-        _required_skills.push(sanitizeWord);
+      if (
+        skillsDB.some((skill) => new RegExp(sanitizeWord, 'i').test(skill)) &&
+        sanitizeWord.length > 0
+      ) {
+        _required_skills.push(new RegExp(sanitizeWord, 'i'));
+        _required_skills_text.push(sanitizeWord);
       }
     });
     Discription.split(' ').forEach((word) => {
       const sanitizeWord = word.replace(/[.,-?;:!\s]/g, '').toLowerCase();
-      if (skillsDB.includes(sanitizeWord)) {
-        _required_skills.push(sanitizeWord);
+      if (
+        skillsDB.some((skill) => new RegExp(sanitizeWord, 'i').test(skill)) &&
+        sanitizeWord.length > 0
+      ) {
+        _required_skills.push(new RegExp(sanitizeWord, 'i'));
+        _required_skills_text.push(sanitizeWord);
       }
     });
     Additional.split(' ').forEach((word) => {
       const sanitizeWord = word.replace(/[.,-?;:!\s]/g, '').toLowerCase();
-      if (skillsDB.includes(sanitizeWord)) {
-        _required_skills.push(sanitizeWord);
+      if (
+        skillsDB.some((skill) => new RegExp(sanitizeWord, 'i').test(skill)) &&
+        sanitizeWord.length > 0
+      ) {
+        _required_skills.push(new RegExp(sanitizeWord, 'i'));
+        _required_skills_text.push(sanitizeWord);
       }
     });
 
     const _required_skills_unique = [...new Set(_required_skills)];
+    const _required_skills_text_unique = [...new Set(_required_skills_text)];
 
     const recomended_candidates = await this.studentModel
       .find({ '_skills_private.skill': { $in: _required_skills_unique } })
@@ -57,7 +72,7 @@ export class JobService {
     const InsertData = {
       _id,
       ...data,
-      _required_skills: _required_skills_unique,
+      _required_skills: _required_skills_text_unique,
       recommended_candidates: recomended_candidates_id,
     };
 
