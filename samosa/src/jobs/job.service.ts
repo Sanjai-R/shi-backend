@@ -138,6 +138,21 @@ export class JobService {
     return data;
   }
 
+  async getJobByIdForStats(id: string) {
+    const data = await this.jobModel.findOne({ _id: id }).populate([
+      {
+        path: 'posted_by',
+        select:
+          'company_name company_address mobile_number company_website company_logo about why_us',
+      },
+      {
+        path: 'applied_candidates',
+        select: 'name completed_quizzes hackerrank_data leetcode_data',
+      },
+    ]);
+    return data;
+  }
+
   async getJobByCompany(id: string) {
     const jobs = await this.jobModel
       .find({ posted_by: id })

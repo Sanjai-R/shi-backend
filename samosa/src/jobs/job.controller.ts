@@ -33,6 +33,11 @@ export class JobController {
     return this.jobService.getJobsById(params);
   }
 
+  @Get('/getJobByIdStats')
+  getJobByIdStats(@Query('id') params: string) {
+    return this.jobService.getJobByIdForStats(params);
+  }
+
   @Get('/filter')
   getJobByFilter(@Query() params: any) {
     return this.jobService.filter(params.name, params.location);
