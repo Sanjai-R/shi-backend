@@ -16,40 +16,48 @@ export class JobService {
   async createJob(data: JobDto) {
     const skills = await this.skillModel.find();
     const skillsDB = skills.map((skill) => skill.skill);
-    const keyQualification = data.key_qualifiations;
-    const Discription = data.description;
-    const Additional = data.additional_requirements;
+    const keyQualification = data.key_qualifiations.replace(/\n/g, ' ');
+    const Discription = data.description.replace(/\n/g, ' ');
+    const Additional = data.additional_requirements.replace(/\n/g, ' ');
     const _required_skills = [];
     const _required_skills_text = [];
 
     keyQualification.split(' ').forEach((word) => {
       const sanitizeWord = word.replace(/[.,-?;:!\s]/g, '').toLowerCase();
-      if (
-        skillsDB.some((skill) => new RegExp(sanitizeWord, 'i').test(skill)) &&
-        sanitizeWord.length > 0
-      ) {
-        _required_skills.push(new RegExp(sanitizeWord, 'i'));
-        _required_skills_text.push(sanitizeWord);
+      if (/^[0-9a-zA-Z]+$/.test(sanitizeWord)) {
+        const parsedSkills = skillsDB.filter(
+          (skill: string) => sanitizeWord === skill,
+        );
+        parsedSkills.forEach((skill: string) => {
+          _required_skills.push(new RegExp(skill, 'i'));
+          _required_skills_text.push(skill);
+        });
       }
     });
+
     Discription.split(' ').forEach((word) => {
       const sanitizeWord = word.replace(/[.,-?;:!\s]/g, '').toLowerCase();
-      if (
-        skillsDB.some((skill) => new RegExp(sanitizeWord, 'i').test(skill)) &&
-        sanitizeWord.length > 0
-      ) {
-        _required_skills.push(new RegExp(sanitizeWord, 'i'));
-        _required_skills_text.push(sanitizeWord);
+      if (/^[0-9a-zA-Z]+$/.test(sanitizeWord)) {
+        const parsedSkills = skillsDB.filter(
+          (skill: string) => sanitizeWord === skill,
+        );
+        parsedSkills.forEach((skill: string) => {
+          _required_skills.push(new RegExp(skill, 'i'));
+          _required_skills_text.push(skill);
+        });
       }
     });
+
     Additional.split(' ').forEach((word) => {
       const sanitizeWord = word.replace(/[.,-?;:!\s]/g, '').toLowerCase();
-      if (
-        skillsDB.some((skill) => new RegExp(sanitizeWord, 'i').test(skill)) &&
-        sanitizeWord.length > 0
-      ) {
-        _required_skills.push(new RegExp(sanitizeWord, 'i'));
-        _required_skills_text.push(sanitizeWord);
+      if (/^[0-9a-zA-Z]+$/.test(sanitizeWord)) {
+        const parsedSkills = skillsDB.filter(
+          (skill: string) => sanitizeWord === skill,
+        );
+        parsedSkills.forEach((skill: string) => {
+          _required_skills.push(new RegExp(skill, 'i'));
+          _required_skills_text.push(skill);
+        });
       }
     });
 
