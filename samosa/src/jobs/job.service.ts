@@ -1,7 +1,12 @@
 import { Model, Types } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { JobInterface } from './interfaces/job.interface';
-import { JobDto, UpdateJobDto, CategoryJobDto } from './dto/job.dto';
+import {
+  JobDto,
+  UpdateJobDto,
+  CategoryJobDto,
+  AddCandidateDto,
+} from './dto/job.dto';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { sendNotification } from 'src/utils/firebase-admin';
 
@@ -194,5 +199,24 @@ export class JobService {
       }
     });
     return jobs;
+  }
+
+  async addCandidate(data: AddCandidateDto) {
+    const { job_id, candidate_id } = data;
+    try {
+      await this.jobModel.findOneAndUpdate(
+        { _id: job_id },
+        {
+          $addToSet: {
+            applied_candidates: candidate_id,
+          },
+        },
+      );
+      return {
+        success: true,
+      };
+    } catch (err) {
+      throw new NotFoundException();
+    }
   }
 }

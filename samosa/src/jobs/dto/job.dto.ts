@@ -104,3 +104,13 @@ export class CategoryJobDto {
   @IsNotEmpty()
   title: string;
 }
+
+export class AddCandidateDto {
+  @IsString()
+  @IsNotEmpty()
+  job_id: string;
+
+  @IsString()
+  @IsNotEmpty()
+  candidate_id: string;
+}
