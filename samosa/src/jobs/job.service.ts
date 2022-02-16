@@ -12,6 +12,7 @@ export class JobService {
     private readonly jobModel: Model<JobInterface>,
     @InjectModel('Skill') private readonly skillModel: Model<{ skill: string }>,
     @InjectModel('Student') private readonly studentModel: Model<any>,
+    @InjectModel('Corporate') private readonly corporateModel: Model<any>,
   ) {}
   async createJob(data: JobDto) {
     const skills = await this.skillModel.find();
@@ -114,14 +115,11 @@ export class JobService {
   }
 
   async getAllJobs() {
-    const jobs = await this.jobModel
-      .find()
-      .sort([['date_posted', -1]])
-      .populate({
-        path: 'posted_by',
-        select: 'company_name company_logo',
-      })
-      .select('_id title description location is_closed');
+    const jobs = await this.jobModel.find().populate({
+      path: 'posted_by',
+      select:
+        'company_name company_address mobile_number company_website company_logo',
+    });
     return jobs;
   }
   async getJobsById(id: string) {
@@ -134,7 +132,8 @@ export class JobService {
     });
     return data;
   }
-  async getJobByComapny(id: string) {
+
+  async getJobByCompany(id: string) {
     const jobs = await this.jobModel
       .find({ posted_by: id })
       .sort({ date_posted: 'desc' })
@@ -166,6 +165,34 @@ export class JobService {
 
   async getJobByCategory(category: CategoryJobDto) {
     const jobs = await this.jobModel.find({ title: category.title });
+    return jobs;
+  }
+
+  async filter(name: string, location: string) {
+    const data = await this.getAllJobs();
+    const jobs = [];
+    data.map((job: any) => {
+      if (location == '' && name == '') {
+        console.log('empty');
+      } else if (
+        location != '' &&
+        name == '' &&
+        job.location.toLowerCase().match(location.toLowerCase())
+      ) {
+        jobs.push(job);
+      } else if (
+        name != '' &&
+        location == '' &&
+        job.posted_by.company_name.toLowerCase() == name.toLowerCase()
+      ) {
+        jobs.push(job);
+      } else if (
+        job.posted_by.company_name.toLowerCase() == name.toLowerCase() &&
+        job.location.toLowerCase().match(location.toLowerCase())
+      ) {
+        jobs.push(job);
+      }
+    });
     return jobs;
   }
 }

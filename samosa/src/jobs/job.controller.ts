@@ -21,12 +21,18 @@ export class JobController {
 
   @Get('/filter-company')
   getJobByCompany(@Query('id') params: string) {
-    return this.jobService.getJobByComapny(params);
+    return this.jobService.getJobByCompany(params);
   }
   @Get('/getJobById')
   getJobById(@Query('id') params: string) {
     return this.jobService.getJobsById(params);
   }
+
+  @Get('/filter')
+  getJobByFilter(@Query() params: any) {
+    return this.jobService.filter(params.name, params.location);
+  }
+
   @Post('/createJob')
   createJob(@Body() data: JobDto) {
     return this.jobService.createJob(data);
