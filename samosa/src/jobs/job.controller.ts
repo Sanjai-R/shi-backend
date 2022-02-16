@@ -27,13 +27,10 @@ export class JobController {
   getJobById(@Query('id') params: string) {
     return this.jobService.getJobsById(params);
   }
-  @Get('/getJobByLocation')
-  getJobByLocation(@Query('location') params: string) {
-    return this.jobService.getJobByLocation(params);
-  }
-  @Get('/getJobByCompanyName')
-  getJobByCompanyName(@Query('name') params: string) {
-    return this.jobService.getJobByCompanyName(params);
+
+  @Get('/filter')
+  getJobByFilter(@Query() params: any) {
+    return this.jobService.filter(params.name, params.location);
   }
 
   @Post('/createJob')

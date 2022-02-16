@@ -100,22 +100,6 @@ export class JobService {
     return jobs;
   }
   async getJobsById(id: string) {
-    const data = await this.jobModel.findOne({ _id: id }).populate({
-      path: 'posted_by',
-      select:
-        'company_name company_address mobile_number company_website company_logo',
-    });
-    const jobs = await this.jobModel
-      .find()
-      .sort([['date_posted', -1]])
-      .populate({
-        path: 'posted_by',
-        select: 'company_name company_logo',
-      })
-      .select('_id title description location is_closed');
-    return jobs;
-  }
-  async getJobsById(id: string) {
     const data = await (
       await this.jobModel.findOne({ _id: id })
     ).populate({
@@ -125,6 +109,7 @@ export class JobService {
     });
     return data;
   }
+
   async getJobByCompany(id: string) {
     const jobs = await this.jobModel
       .find({ posted_by: id })
@@ -159,26 +144,32 @@ export class JobService {
     const jobs = await this.jobModel.find({ title: category.title });
     return jobs;
   }
-  async getJobByLocation(location: string) {
+
+  async filter(name: string, location: string) {
     const data = await this.getAllJobs();
     const jobs = [];
     data.map((job: any) => {
-      if (job.location.toLowerCase().match(location.toLowerCase())) {
+      if (location == '' && name == '') {
+        console.log('empty');
+      } else if (
+        location != '' &&
+        name == '' &&
+        job.location.toLowerCase().match(location.toLowerCase())
+      ) {
+        jobs.push(job);
+      } else if (
+        name != '' &&
+        location == '' &&
+        job.posted_by.company_name.toLowerCase() == name.toLowerCase()
+      ) {
+        jobs.push(job);
+      } else if (
+        job.posted_by.company_name.toLowerCase() == name.toLowerCase() &&
+        job.location.toLowerCase().match(location.toLowerCase())
+      ) {
         jobs.push(job);
       }
     });
-    return jobs;
-  }
-  async getJobByCompanyName(companyName: string) {
-    const jobs = await this.jobModel.find().populate([
-      {
-        path: 'posted_by',
-        match: { company_name: companyName, case_sensitive: false },
-        select:
-          'company_name company_address mobile_number company_website company_logo',
-      },
-    ]);
-
     return jobs;
   }
 }
