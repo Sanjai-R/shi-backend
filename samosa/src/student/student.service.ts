@@ -95,7 +95,6 @@ export class StudentService {
     });
     if (hackerrank != null) {
       Hackerrank = await HackerrankScrapper(hackerrank);
-      console.log(Hackerrank);
     }
     if (Leetcode != null) {
       Leetcode = await LeetcodeScrapper(leetcode);
@@ -268,5 +267,16 @@ export class StudentService {
     return {
       success: true,
     };
+  }
+
+  async getQuizData(id: string) {
+    const res = await this.studentModel
+      .findOne({ _id: id })
+      .select('completed_quizzes');
+    if (res === null) {
+      throw new NotFoundException();
+    } else {
+      return res;
+    }
   }
 }
