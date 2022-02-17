@@ -15,7 +15,9 @@ async function bootstrap() {
   app.use(compression());
   app.use(helmet());
   app.use(json({ limit: '3mb' }));
-  const R = new redis();
+  const R = new redis(
+    'redis://:b4722ca688d24027a33b0f649208bc8d@eu1-aware-tuna-35243.upstash.io:35243',
+  );
   global.Publisher = R;
   global.Subscriber = R.duplicate();
   global.Subscriber.subscribe('get-parsed-data');

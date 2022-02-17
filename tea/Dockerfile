@@ -26,5 +26,10 @@ RUN python3 -m nltk.downloader maxent_ne_chunker
 
 COPY . .
 
+ENV DEBIAN_FRONTEND noninteractive
+RUN  apt-get install -y openjdk-8-jdk
+
+ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
+
 
 CMD [ "python3", "./script.py" ]
