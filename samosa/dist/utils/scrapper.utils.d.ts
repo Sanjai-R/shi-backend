@@ -11,3 +11,4 @@ export declare const LeetcodeScrapper: (url: string) => Promise<{
     total_pints: number;
     total_problems_solved: number;
 }>;
+export declare const hackathonScrapper: () => Promise<any>;

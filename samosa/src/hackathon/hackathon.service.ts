@@ -2,6 +2,7 @@ import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { hackathonScrapper } from 'src/utils/scrapper.utils';
 import { Injectable } from '@nestjs/common';
+import { Cron } from '@nestjs/schedule';
 @Injectable()
 export class HackathonService {
   constructor(
@@ -23,5 +24,15 @@ export class HackathonService {
       description: 'Hackathons added successfully',
       data: hackathon,
     };
+  }
+
+  @Cron('0 0 0 * * *')
+  async scarpHackathons() {
+    await this.hackathonModel.deleteMany({});
+    const hackathon = await hackathonScrapper();
+
+    hackathon.map(async (data) => {
+      await new this.hackathonModel(data).save();
+    });
   }
 }
