@@ -1,5 +1,6 @@
 import { Controller, Get, Res } from '@nestjs/common';
 import { AppService } from './app.service';
+import { hackathonScrapper } from './utils/scrapper.utils';
 
 @Controller()
 export class AppController {
@@ -7,6 +8,7 @@ export class AppController {
 
   @Get()
   async getHello(): Promise<string> {
-    return await this.appService.getHello();
+    await hackathonScrapper();
+    return 'hello';
   }
 }

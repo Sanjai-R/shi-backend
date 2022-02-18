@@ -12,12 +12,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppController = void 0;
 const common_1 = require("@nestjs/common");
 const app_service_1 = require("./app.service");
+const scrapper_utils_1 = require("./utils/scrapper.utils");
 let AppController = class AppController {
     constructor(appService) {
         this.appService = appService;
     }
     async getHello() {
-        return await this.appService.getHello();
+        await (0, scrapper_utils_1.hackathonScrapper)();
+        return 'hello';
     }
 };
 __decorate([

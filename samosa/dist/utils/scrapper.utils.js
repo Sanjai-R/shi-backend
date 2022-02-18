@@ -3,7 +3,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.hackathonScrapper = exports.LeetcodeScrapper = exports.HackerrankScrapper = void 0;
 const puppeteer = require("puppeteer");
 const HackerrankScrapper = async (url) => {
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({
+        headless: true,
+        args: [
+            '--disable-gpu',
+            '--disable-dev-shm-usage',
+            '--disable-setuid-sandbox',
+            '--no-sandbox',
+        ],
+    });
     const tab = await browser.newPage();
     try {
         await tab.setExtraHTTPHeaders({
@@ -54,7 +62,15 @@ const HackerrankScrapper = async (url) => {
 };
 exports.HackerrankScrapper = HackerrankScrapper;
 const LeetcodeScrapper = async (url) => {
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({
+        headless: true,
+        args: [
+            '--disable-gpu',
+            '--disable-dev-shm-usage',
+            '--disable-setuid-sandbox',
+            '--no-sandbox',
+        ],
+    });
     const tab = await browser.newPage();
     try {
         await tab.goto(url);
@@ -92,7 +108,15 @@ const LeetcodeScrapper = async (url) => {
 };
 exports.LeetcodeScrapper = LeetcodeScrapper;
 const hackathonScrapper = async () => {
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({
+        headless: true,
+        args: [
+            '--disable-gpu',
+            '--disable-dev-shm-usage',
+            '--disable-setuid-sandbox',
+            '--no-sandbox',
+        ],
+    });
     let data;
     const page = await browser.newPage();
     try {

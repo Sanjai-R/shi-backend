@@ -1,7 +1,15 @@
 import * as puppeteer from 'puppeteer';
 
 export const HackerrankScrapper = async (url: string) => {
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: [
+      '--disable-gpu',
+      '--disable-dev-shm-usage',
+      '--disable-setuid-sandbox',
+      '--no-sandbox',
+    ],
+  });
   const tab = await browser.newPage();
   try {
     await tab.setExtraHTTPHeaders({
@@ -58,7 +66,15 @@ export const HackerrankScrapper = async (url: string) => {
 };
 
 export const LeetcodeScrapper = async (url: string) => {
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: [
+      '--disable-gpu',
+      '--disable-dev-shm-usage',
+      '--disable-setuid-sandbox',
+      '--no-sandbox',
+    ],
+  });
   const tab = await browser.newPage();
   try {
     await tab.goto(url);
@@ -97,7 +113,15 @@ export const LeetcodeScrapper = async (url: string) => {
   }
 };
 export const hackathonScrapper = async () => {
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: [
+      '--disable-gpu',
+      '--disable-dev-shm-usage',
+      '--disable-setuid-sandbox',
+      '--no-sandbox',
+    ],
+  });
   let data;
   const page = await browser.newPage();
   try {
