@@ -15,8 +15,8 @@ export class HackathonService {
   async postHackathon() {
     const hackathon = await hackathonScrapper();
 
-    hackathon.map(async (ele) => {
-      await new this.hackathonModel(ele).save();
+    hackathon.map(async (data) => {
+      await new this.hackathonModel(data).save();
     });
     return {
       success: true,
