@@ -7,6 +7,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { SkillsModule } from './skills/skills.module';
 import { HackathonModule } from './hackathon/hackathon.module';
+
+import { QuizModule } from './quiz/quiz.module';
 @Module({
   imports: [
     MongooseModule.forRoot(
@@ -15,7 +17,9 @@ import { HackathonModule } from './hackathon/hackathon.module';
     StudentModule,
     CorporateModule,
     JobModule,
+
     HackathonModule,
+    QuizModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -25,6 +25,9 @@ export const StudentSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  completed_quizzes: {
+    type: Array,
+  },
   skills: {
     type: [],
   },

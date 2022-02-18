@@ -41,6 +41,10 @@ export const JobSchema = new mongoose.Schema({
     type: [mongoose.Schema.Types.ObjectId],
     ref: 'Student',
   },
+  applied_candidates: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: 'Student',
+  },
   experience_level: {
     type: String,
   },

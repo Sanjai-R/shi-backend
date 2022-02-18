@@ -6,7 +6,11 @@ import json
 import time
 
 
-redis_client = redis.Redis()
+redis_client = redis.Redis(
+  host= 'eu1-aware-tuna-35243.upstash.io',
+  port= '35243',
+  password= 'b4722ca688d24027a33b0f649208bc8d'
+)
 
 print(redis_client)
 

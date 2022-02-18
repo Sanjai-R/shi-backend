@@ -1,6 +1,11 @@
 import { Body, Controller, Get, Post, Put, Query, Req } from '@nestjs/common';
 import { JobService } from './job.service';
-import { JobDto, UpdateJobDto, CategoryJobDto } from './dto/job.dto';
+import {
+  JobDto,
+  UpdateJobDto,
+  CategoryJobDto,
+  AddCandidateDto,
+} from './dto/job.dto';
 @Controller('job')
 export class JobController {
   constructor(private readonly jobService: JobService) {}
@@ -28,6 +33,11 @@ export class JobController {
     return this.jobService.getJobsById(params);
   }
 
+  @Get('/getJobByIdStats')
+  getJobByIdStats(@Query('id') params: string) {
+    return this.jobService.getJobByIdForStats(params);
+  }
+
   @Get('/filter')
   getJobByFilter(@Query() params: any) {
     return this.jobService.filter(params.name, params.location);
@@ -41,5 +51,10 @@ export class JobController {
   @Put('/updateJob')
   updateJob(@Body() data: UpdateJobDto) {
     return this.jobService.updateJob(data);
+  }
+
+  @Put('/add-candidate')
+  addCandidatate(@Body() data: AddCandidateDto) {
+    return this.jobService.addCandidate(data);
   }
 }

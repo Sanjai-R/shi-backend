@@ -1,7 +1,12 @@
 import { Model, Types } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { JobInterface } from './interfaces/job.interface';
-import { JobDto, UpdateJobDto, CategoryJobDto } from './dto/job.dto';
+import {
+  JobDto,
+  UpdateJobDto,
+  CategoryJobDto,
+  AddCandidateDto,
+} from './dto/job.dto';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { sendNotification } from 'src/utils/firebase-admin';
 
@@ -17,31 +22,53 @@ export class JobService {
   async createJob(data: JobDto) {
     const skills = await this.skillModel.find();
     const skillsDB = skills.map((skill) => skill.skill);
-    const keyQualification = data.key_qualifiations;
-    const Discription = data.description;
-    const Additional = data.additional_requirements;
+    const keyQualification = data.key_qualifiations.replace(/\n/g, ' ');
+    const Discription = data.description.replace(/\n/g, ' ');
+    const Additional = data.additional_requirements.replace(/\n/g, ' ');
     const _required_skills = [];
+    const _required_skills_text = [];
 
     keyQualification.split(' ').forEach((word) => {
       const sanitizeWord = word.replace(/[.,-?;:!\s]/g, '').toLowerCase();
-      if (skillsDB.includes(sanitizeWord)) {
-        _required_skills.push(sanitizeWord);
+      if (/^[0-9a-zA-Z]+$/.test(sanitizeWord)) {
+        const parsedSkills = skillsDB.filter(
+          (skill: string) => sanitizeWord === skill,
+        );
+        parsedSkills.forEach((skill: string) => {
+          _required_skills.push(new RegExp(skill, 'i'));
+          _required_skills_text.push(skill);
+        });
       }
     });
+
     Discription.split(' ').forEach((word) => {
       const sanitizeWord = word.replace(/[.,-?;:!\s]/g, '').toLowerCase();
-      if (skillsDB.includes(sanitizeWord)) {
-        _required_skills.push(sanitizeWord);
+      if (/^[0-9a-zA-Z]+$/.test(sanitizeWord)) {
+        const parsedSkills = skillsDB.filter(
+          (skill: string) => sanitizeWord === skill,
+        );
+        parsedSkills.forEach((skill: string) => {
+          _required_skills.push(new RegExp(skill, 'i'));
+          _required_skills_text.push(skill);
+        });
       }
     });
+
     Additional.split(' ').forEach((word) => {
       const sanitizeWord = word.replace(/[.,-?;:!\s]/g, '').toLowerCase();
-      if (skillsDB.includes(sanitizeWord)) {
-        _required_skills.push(sanitizeWord);
+      if (/^[0-9a-zA-Z]+$/.test(sanitizeWord)) {
+        const parsedSkills = skillsDB.filter(
+          (skill: string) => sanitizeWord === skill,
+        );
+        parsedSkills.forEach((skill: string) => {
+          _required_skills.push(new RegExp(skill, 'i'));
+          _required_skills_text.push(skill);
+        });
       }
     });
 
     const _required_skills_unique = [...new Set(_required_skills)];
+    const _required_skills_text_unique = [...new Set(_required_skills_text)];
 
     const recomended_candidates = await this.studentModel
       .find({ '_skills_private.skill': { $in: _required_skills_unique } })
@@ -59,7 +86,7 @@ export class JobService {
     const InsertData = {
       _id,
       ...data,
-      _required_skills: _required_skills_unique,
+      _required_skills: _required_skills_text_unique,
       recommended_candidates: recomended_candidates_id,
     };
 
@@ -108,6 +135,21 @@ export class JobService {
       select:
         'company_name company_address mobile_number company_website company_logo about why_us',
     });
+    return data;
+  }
+
+  async getJobByIdForStats(id: string) {
+    const data = await this.jobModel.findOne({ _id: id }).populate([
+      {
+        path: 'posted_by',
+        select:
+          'company_name company_address mobile_number company_website company_logo about why_us',
+      },
+      {
+        path: 'applied_candidates',
+        select: 'name completed_quizzes hackerrank_data leetcode_data',
+      },
+    ]);
     return data;
   }
 
@@ -172,5 +214,24 @@ export class JobService {
       }
     });
     return jobs;
+  }
+
+  async addCandidate(data: AddCandidateDto) {
+    const { job_id, candidate_id } = data;
+    try {
+      await this.jobModel.findOneAndUpdate(
+        { _id: job_id },
+        {
+          $addToSet: {
+            applied_candidates: candidate_id,
+          },
+        },
+      );
+      return {
+        success: true,
+      };
+    } catch (err) {
+      throw new NotFoundException();
+    }
   }
 }
