@@ -20,7 +20,7 @@ async function bootstrap() {
     global.Publisher = R;
     global.Subscriber = R.duplicate();
     global.Subscriber.subscribe('get-parsed-data');
-    await app.listen(8000);
+    await app.listen(process.env.PORT || 8000);
 }
 bootstrap();
 //# sourceMappingURL=main.js.map
