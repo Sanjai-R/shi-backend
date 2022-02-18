@@ -96,3 +96,37 @@ export const LeetcodeScrapper = async (url: string) => {
     };
   }
 };
+export const hackathonScrapper = async () => {
+  const browser = await puppeteer.launch();
+  let data;
+  const page = await browser.newPage();
+  try {
+    await page.goto('https://devfolio.co/hackathons');
+    await page.waitForSelector('.kCxSkW > div');
+    data = await page.evaluate(() =>
+      Array.from(document.querySelectorAll('.kCxSkW > div')).map((e) => {
+        return {
+          title: e.querySelector('a>span').textContent,
+          link: e.querySelector('a').href,
+          date: e.querySelector(
+            'div:nth-child(2) > div:nth-child(1) > span.sc-fzqBZW.dgEiEh',
+          ).textContent,
+          held_at: e.querySelector(
+            'div:nth-child(2).gwHgou> div:nth-child(2)>span:nth-child(2)',
+          ).textContent,
+          application_closed:
+            e.querySelector(
+              'div:nth-child(2).gwHgou> div:nth-child(3)>span:nth-child(2)',
+            ) == null
+              ? ''
+              : e.querySelector(
+                  'div:nth-child(2).gwHgou> div:nth-child(3)>span:nth-child(2)',
+                ).textContent,
+        };
+      }),
+    );
+  } catch (error) {
+    console.log(error);
+  }
+  return data;
+};

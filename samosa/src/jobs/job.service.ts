@@ -4,6 +4,7 @@ import { JobInterface } from './interfaces/job.interface';
 import { JobDto, UpdateJobDto, CategoryJobDto } from './dto/job.dto';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { sendNotification } from 'src/utils/firebase-admin';
+
 @Injectable()
 export class JobService {
   constructor(
