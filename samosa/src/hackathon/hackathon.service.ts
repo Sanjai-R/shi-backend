@@ -1,6 +1,6 @@
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
-import { hackathonScrapper } from 'src/utils/scrapper.utils';
+import { hackathonScrapper, devPostScrapper } from 'src/utils/scrapper.utils';
 import { Injectable } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
 @Injectable()
@@ -14,7 +14,7 @@ export class HackathonService {
     return data;
   }
   async postHackathon() {
-    const hackathon = await hackathonScrapper();
+    const hackathon = await devPostScrapper();
 
     hackathon.map(async (data) => {
       await new this.hackathonModel(data).save();

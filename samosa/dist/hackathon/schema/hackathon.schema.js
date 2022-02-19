@@ -9,14 +9,17 @@ exports.hackathonSchema = new mongoose.Schema({
     link: {
         type: String,
     },
-    held_on: {
+    image: {
         type: String,
     },
-    held_at: {
+    date: {
         type: String,
     },
-    application_closed: {
+    company: {
         type: String,
+    },
+    tags: {
+        type: [String],
     },
 });
 //# sourceMappingURL=hackathon.schema.js.map

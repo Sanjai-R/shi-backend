@@ -12,3 +12,4 @@ export declare const LeetcodeScrapper: (url: string) => Promise<{
     total_problems_solved: number;
 }>;
 export declare const hackathonScrapper: () => Promise<any>;
+export declare const devPostScrapper: () => Promise<any>;
