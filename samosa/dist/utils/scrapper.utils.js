@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.hackathonScrapper = exports.LeetcodeScrapper = exports.HackerrankScrapper = void 0;
+exports.devPostScrapper = exports.hackathonScrapper = exports.LeetcodeScrapper = exports.HackerrankScrapper = void 0;
 const puppeteer = require("puppeteer");
 const HackerrankScrapper = async (url) => {
     const browser = await puppeteer.launch({
@@ -140,4 +140,55 @@ const hackathonScrapper = async () => {
     return data;
 };
 exports.hackathonScrapper = hackathonScrapper;
+const devPostScrapper = async () => {
+    const browser = await puppeteer.launch();
+    let data;
+    const page = await browser.newPage();
+    try {
+        await page.goto('https://devpost.com/hackathons?page=6');
+        await page.waitForSelector('.hackathons-container');
+        await autoScroll(page);
+        data = await page.evaluate(() => Array.from(document.querySelectorAll('.hackathons-container>div')).map((e) => {
+            return {
+                title: e.querySelector('h3') != null
+                    ? e.querySelector('h3').innerHTML
+                    : '',
+                link: e.querySelector('a') != null ? e.querySelector('a').href : '',
+                image: e.querySelector('img') != null ? e.querySelector('img').src : '',
+                date: e.querySelector('div > strong >div') != null
+                    ? e.querySelector('div > strong >div').textContent
+                    : '',
+                company: e.querySelector(' a > div.side-info > div.mb-4.host > div > div') != null
+                    ? e.querySelector(' a > div.side-info > div.mb-4.host > div > div').textContent
+                    : '',
+                tags: e.querySelectorAll('a > div.side-info > div.themes > div>div>span') != null
+                    ? Array.from(e.querySelectorAll('a > div.side-info > div.themes > div>div>span')).map((e) => e.textContent)
+                    : [],
+            };
+        }));
+        console.log(data);
+    }
+    catch (error) {
+        console.log(error);
+    }
+    return data;
+};
+exports.devPostScrapper = devPostScrapper;
+async function autoScroll(page) {
+    await page.evaluate(async () => {
+        await new Promise((resolve) => {
+            let totalHeight = 0;
+            const distance = 100;
+            const timer = setInterval(() => {
+                const scrollHeight = document.body.scrollHeight;
+                window.scrollBy(0, distance);
+                totalHeight += distance;
+                if (totalHeight >= scrollHeight) {
+                    clearInterval(timer);
+                    resolve();
+                }
+            }, 100);
+        });
+    });
+}
 //# sourceMappingURL=scrapper.utils.js.map

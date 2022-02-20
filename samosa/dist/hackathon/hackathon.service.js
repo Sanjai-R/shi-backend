@@ -27,7 +27,7 @@ let HackathonService = class HackathonService {
         return data;
     }
     async postHackathon() {
-        const hackathon = await (0, scrapper_utils_1.hackathonScrapper)();
+        const hackathon = await (0, scrapper_utils_1.devPostScrapper)();
         hackathon.map(async (data) => {
             await new this.hackathonModel(data).save();
         });
@@ -39,7 +39,7 @@ let HackathonService = class HackathonService {
     }
     async scarpHackathons() {
         await this.hackathonModel.deleteMany({});
-        const hackathon = await (0, scrapper_utils_1.hackathonScrapper)();
+        const hackathon = await (0, scrapper_utils_1.devPostScrapper)();
         hackathon.map(async (data) => {
             await new this.hackathonModel(data).save();
         });
