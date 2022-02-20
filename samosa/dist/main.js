@@ -10,7 +10,7 @@ const redis = require("ioredis");
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
     app.enableCors({
-        origin: 'https://fijo.vercel.app',
+        origin: 'http://localhost:3000',
     });
     app.useGlobalPipes(new common_1.ValidationPipe());
     app.use(compression());
