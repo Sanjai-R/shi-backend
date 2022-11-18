@@ -9,7 +9,7 @@ import * as redis from 'ioredis';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors({
-    origin: 'https://fijo.vercel.app',
+    origin: ['https://fijo.vercel.app','https://fijo-cloud-object-storage-bx-cos-static-web-hosting-m6g.s3.jp-tok.cloud-object-storage.appdomain.cloud'],
   });
   app.useGlobalPipes(new ValidationPipe());
   app.use(compression());
