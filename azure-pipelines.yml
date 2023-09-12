@@ -1,0 +1,42 @@
+trigger:
+- main # Specify the branch you want to trigger the pipeline on
+
+ 
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+ 
+
+steps:
+- task: NodeTool@0
+  inputs:
+    versionSpec: '14.x' # Choose the Node.js version you want
+
+ 
+- script: cd samosa
+  displayName: 'cd to dir'
+
+- script: npm install
+  displayName: 'Install Node.js dependencies'
+
+ 
+
+- script: npm run build # Replace with your build script if necessary
+  displayName: 'Build application'
+
+ 
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    pathtoPublish: '$(System.DefaultWorkingDirectory)/dist' # Replace with your build output directory
+    artifactName: 'drop'
+
+ 
+
+- task: AzureWebApp@1
+  inputs:
+    azureSubscription: 'DevOps - Training(e34397b2-486a-417d-bd5a-b9113a4a1b0c)'
+    appName: 'demo-app-poc'
+    package: $(Pipeline.Workspace)/drop/*.zip # Change the path if necessary
+    startUpCommand: 'node main.js' # Replace with your startup command
